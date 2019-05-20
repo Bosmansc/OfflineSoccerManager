@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/greywallpaper">
+
+    <Button
+        android:id="@+id/btn_viewGames"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/btn_background"
+        android:text="Alle wedstrijden"
+        app:layout_constraintCircleRadius="0dp"
+        app:layout_constraintStart_toStartOf="@+id/btn_nextGame"
+        app:layout_constraintTop_toBottomOf="@+id/btn_nextGame" />
+
+    <Button
+        android:id="@+id/btn_nextGame"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/btn_background"
+        android:text="Volgende wedstrijd"
+        app:layout_constraintCircleRadius="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_aanwezigheid"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/btn_background"
+        android:text="Bevestig aanwezigheid"
+        app:layout_constraintCircleRadius="0dp"
+        app:layout_constraintStart_toStartOf="@+id/btn_viewGames"
+        app:layout_constraintTop_toBottomOf="@+id/btn_viewGames" />
+
+    <Button
+        android:id="@+id/btn_presentPlayers"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/btn_background"
+        android:text="Spelers aanwezig"
+        app:layout_constraintCircleRadius="0dp"
+        app:layout_constraintStart_toStartOf="@+id/btn_aanwezigheid"
+        app:layout_constraintTop_toBottomOf="@+id/btn_aanwezigheid" />
+
+
+</android.support.constraint.ConstraintLayout>
