@@ -1,7 +1,6 @@
 package bosmans.frigo;
 
 import android.app.ProgressDialog;
-import bosmans.frigo.R;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -112,7 +111,7 @@ public class ListAllGames extends AppCompatActivity {
         }
 
         adapter = new SimpleAdapter(this,list,R.layout.activity_list_all_games_row,
-                new String[]{"Ploeg","Plaats","Date"},new int[]{R.id.tv_ploeg,R.id.tv_plaats,R.id.tv_date});
+                new String[]{"Ploeg","Plaats","Date"},new int[]{R.id.tv_speler,R.id.tv_plaats,R.id.tv_ploeg});
 
         listView.setAdapter(adapter);
         loading.dismiss();

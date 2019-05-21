@@ -33,8 +33,8 @@
         android:layout_marginTop="56dp"
         android:text="Te:"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/tv_ploeg"
-        app:layout_constraintTop_toBottomOf="@+id/tv_ploeg" />
+        app:layout_constraintStart_toStartOf="@+id/tv_speler"
+        app:layout_constraintTop_toBottomOf="@+id/tv_speler" />
 
     <TextView
         android:id="@+id/textView4"
@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_plaats" />
 
     <TextView
-        android:id="@+id/tv_ploeg"
+        android:id="@+id/tv_speler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"

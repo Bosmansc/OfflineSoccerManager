@@ -1,7 +1,6 @@
 package bosmans.frigo;
 
 import android.app.ProgressDialog;
-import bosmans.frigo.R;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +32,7 @@ public class NextGame extends AppCompatActivity {
         setContentView(R.layout.activity_next_game);
         nextGameDate = (TextView)findViewById(R.id.tv_nextGameTijd);
         nextGamePlaats = (TextView)findViewById(R.id.tv_plaats);
-        nextGamePloeg = (TextView)findViewById(R.id.tv_ploeg);
+        nextGamePloeg = (TextView)findViewById(R.id.tv_speler);
 
         getGame();
 
