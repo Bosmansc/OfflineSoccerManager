@@ -21,19 +21,6 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btn_nextGame"
-        android:layout_width="32dp"
-        android:layout_height="20dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/btn_background"
-        android:text="Volgende wedstrijd"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintCircleRadius="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-    <Button
         android:id="@+id/btn_aanwezigheid"
         android:layout_width="138dp"
         android:layout_height="106dp"
@@ -52,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nextGame"
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
@@ -69,7 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/tv_nextGame"
         android:layout_width="371dp"
         android:layout_height="165dp"
         android:layout_marginStart="8dp"
@@ -78,7 +65,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="center"
-        android:text="Volgende wedstrijd  \n \n Harde Krista's \n \n 21/05/2019 21:00"
+        android:text="Volgende wedstrijd"
         android:textSize="20sp"
         app:fontFamily="sans-serif-medium"
         app:layout_constraintEnd_toEndOf="parent"
