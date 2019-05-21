@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="android.frigoapp">
+    package="bosmans.frigo">
     <uses-permission android:name="android.permission.INTERNET" />
     <dist:module dist:instant="true" />
 
@@ -12,11 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PresentPlayers"></activity>
-        <activity android:name=".AddPlayerToGame" />
-        <activity android:name=".ListAllGames" />
-        <activity android:name=".NextGame" />
-        <activity android:name=".MainActivity">
+        <activity android:name="bosmans.frigo.PresentPlayers"></activity>
+        <activity android:name="bosmans.frigo.AddPlayerToGame" />
+        <activity android:name="bosmans.frigo.ListAllGames" />
+        <activity android:name="bosmans.frigo.NextGame" />
+        <activity android:name="bosmans.frigo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,10 +1,14 @@
-package android.frigoapp;
+package bosmans.frigo;
+
 import android.app.ProgressDialog;
+import android.content.Intent;
+import bosmans.frigo.R;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -21,31 +25,40 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
-public class PresentPlayers extends AppCompatActivity {
+public class AddPlayerToGame extends AppCompatActivity implements View.OnClickListener {
 
-    ListView listView;
-    ListAdapter adapter;
+    EditText editTextNaam;
+    Button buttonBevestig;
     ProgressDialog loading;
     String volgendePloeg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_present_players);
+        setContentView(R.layout.activity_add_player_to_game);
 
-        listView = findViewById(R.id.lv_players);
+        editTextNaam = findViewById(R.id.et_naam); // in de toekomst naam van login gebruiken
+        buttonBevestig = (Button)findViewById(R.id.btn_bevestig);
+        buttonBevestig.setOnClickListener(this);
+    }
 
-        getNextGame(); // nodig om juiste get request te kunnen doen (parameter ploeg is vereist)
+    @Override
+    public void onClick(View v) {
 
+        if(v==buttonBevestig){
+            getGame();
+
+        }
     }
 
     // use the following methods to get the next game (naam van de volgende ploeg, om de speler in de juiste kolom toe te voegen)
-    private void getNextGame(){
+
+    private void getGame(){
 
         loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
 
@@ -53,7 +66,7 @@ public class PresentPlayers extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        parseItemsNextGame(response);
+                        parseItems(response);
                     }
                 },
 
@@ -65,17 +78,17 @@ public class PresentPlayers extends AppCompatActivity {
                 }
         );
 
-
-
         int socketTimeOut = 50000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(stringRequest);
 
+
+
     }
 
-    private void parseItemsNextGame(String jsonResposnce) {
+    private void parseItems(String jsonResposnce) {
         try {
             JSONObject jobj = new JSONObject(jsonResposnce);
             JSONArray jarray = jobj.getJSONArray("games");
@@ -99,8 +112,8 @@ public class PresentPlayers extends AppCompatActivity {
 
                 if(date.compareTo(convertedDate) < 0) // Return value > 0 , if convertedDate is after the date argument.
                 {
-                    volgendePloeg = ploeg.replaceAll(" ","").replaceAll("'","");
-                    getPlayers();
+                    volgendePloeg = ploeg;
+                    addNameToSheet(); // here the name is added to the sheet based on the next opponent
                     break;
                 }
 
@@ -110,67 +123,52 @@ public class PresentPlayers extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+
     }
 
-    // get the present players of the following game
+    //This is the part where data is transferred from Your Android phone to Sheet by using HTTP Rest API calls
 
-    private void getPlayers() {
+    private void addNameToSheet() {
 
-        String url = "https://script.google.com/macros/s/AKfycbxfBMmH64EOB4XSh2hsHfz682WCr5WrkuBvxEXXQqPJhv1rinc/exec?action=getPlayers&ploeg=" + volgendePloeg.replaceAll(" ","").replaceAll("'","");
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        final String spelerNaam = editTextNaam.getText().toString().trim();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbzxsTjbi4wuds0wBuQW3PrLMaEvbnAD9_-X4ROOn7wGBIZoYEA/exec",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        parseItems(response);
+
+
+                        Toast.makeText(AddPlayerToGame.this,response,Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(intent);
+                        loading.dismiss();
                     }
                 },
-
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                     }
                 }
-        );
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> parmas = new HashMap<>();
 
-        int socketTimeOut = 50000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
+                //here we pass params
+                parmas.put("action","addPlayer");
+                parmas.put("speler",spelerNaam);
+                parmas.put("ploeg",volgendePloeg.replaceAll(" ","").replaceAll("'",""));
+
+                return parmas;
+            }
+        };
+
+        int socketTimeOut = 50000;// u can change this .. here it is 50 seconds
+
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(retryPolicy);
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(stringRequest);
-
     }
-
-    private void parseItems(String jsonResposnce) {
-
-        ArrayList<HashMap<String, String>> list = new ArrayList<>();
-
-        try {
-            JSONObject jobj = new JSONObject(jsonResposnce);
-            JSONArray jarray = jobj.getJSONArray("games");
-
-            for (int i = 0; i < jarray.length(); i++) {
-
-                JSONObject jo = jarray.getJSONObject(i);
-                String player = jo.getString(volgendePloeg);
-                if(!player.isEmpty()) {
-                    // add items to hashMap
-                    HashMap<String, String> item = new HashMap<>();
-                    item.put(volgendePloeg, player);
-                    list.add(item);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        adapter = new SimpleAdapter(this,list,R.layout.activity_present_players_row,
-                new String[]{volgendePloeg},new int[]{R.id.tv_speler});
-
-        listView.setAdapter(adapter);
-        loading.dismiss();
-    }
-
-
-
-
 }

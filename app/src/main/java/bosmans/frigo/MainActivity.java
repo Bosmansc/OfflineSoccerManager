@@ -1,4 +1,4 @@
-package android.frigoapp;
+package bosmans.frigo;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
+import bosmans.frigo.R;
 
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener {
 

@@ -1,4 +1,4 @@
-package android.frigoapp;
+package bosmans.frigo;
 
 import org.junit.Test;
 

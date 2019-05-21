@@ -1,10 +1,13 @@
-package android.frigoapp;
+package bosmans.frigo;
 
 import android.app.ProgressDialog;
+import bosmans.frigo.R;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,29 +21,32 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
-public class NextGame extends AppCompatActivity {
+public class ListAllGames extends AppCompatActivity {
 
-    TextView nextGameDate, nextGamePlaats, nextGamePloeg;
+
+    ListView listView;
+    ListAdapter adapter;
     ProgressDialog loading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_next_game);
-        nextGameDate = (TextView)findViewById(R.id.tv_nextGameTijd);
-        nextGamePlaats = (TextView)findViewById(R.id.tv_plaats);
-        nextGamePloeg = (TextView)findViewById(R.id.tv_ploeg);
+        setContentView(R.layout.activity_list_all_games);
 
-        getGame();
+        listView = findViewById(R.id.lv_games);
+
+        getGames();
 
     }
 
-    private void getGame(){
+    private void getGames() {
 
-        loading =  ProgressDialog.show(this,"Loading","please wait",false,true);
+        loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames",
                 new Response.Listener<String>() {
@@ -53,7 +59,6 @@ public class NextGame extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                     }
                 }
         );
@@ -67,10 +72,12 @@ public class NextGame extends AppCompatActivity {
     }
 
     private void parseItems(String jsonResposnce) {
+
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+
         try {
             JSONObject jobj = new JSONObject(jsonResposnce);
             JSONArray jarray = jobj.getJSONArray("games");
-
 
             for (int i = 0; i < jarray.length(); i++) {
 
@@ -79,6 +86,7 @@ public class NextGame extends AppCompatActivity {
                 String ploeg = jo.getString("Ploeg");
                 String plaats = jo.getString("Plaats");
 
+                // String to date and add 2 hours
                 SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                 SimpleDateFormat destFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Date convertedDate = sourceFormat.parse(gameDate);
@@ -86,25 +94,29 @@ public class NextGame extends AppCompatActivity {
                 cal.setTime(convertedDate);
                 cal.add(Calendar.HOUR, 2);
                 convertedDate = cal.getTime();
-                Date date = new Date();
+                String gameConvDate = destFormat.format(convertedDate);
 
-                if(date.compareTo(convertedDate) < 0) // Return value > 0 , if convertedDate is after the date argument.
-                {
+                // add items to hashMap
+                HashMap<String, String> item = new HashMap<>();
+                item.put("Date", gameConvDate);
+                item.put("Ploeg", ploeg);
+                item.put("Plaats",plaats);
 
-                    String gameConvDate = destFormat.format(convertedDate);
-                    nextGameDate.setText(gameConvDate);
-                    nextGamePloeg.setText(ploeg);
-                    nextGamePlaats.setText(plaats);
-                    break;
-                }
-
+                list.add(item);
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
+        }
+        catch (ParseException e) {
             e.printStackTrace();
         }
 
+        adapter = new SimpleAdapter(this,list,R.layout.activity_list_all_games_row,
+                new String[]{"Ploeg","Plaats","Date"},new int[]{R.id.tv_ploeg,R.id.tv_plaats,R.id.tv_date});
+
+        listView.setAdapter(adapter);
         loading.dismiss();
     }
+
+
 }

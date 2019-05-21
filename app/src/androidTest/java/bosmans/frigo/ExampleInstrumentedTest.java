@@ -1,4 +1,4 @@
-package android.frigoapp;
+package bosmans.frigo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
