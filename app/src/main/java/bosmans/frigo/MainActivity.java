@@ -27,11 +27,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import bosmans.frigo.R;
 
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener {
 
-    Button buttonListGames, buttonAanwezigheid, buttonPresentPlayers, buttonGoalsAndAssists;
+    Button buttonListGames, buttonAanwezigheid, buttonPresentPlayers, buttonGoalsAndAssists, buttonEditGoalsAndAssists;
     TextView nextGame;
     ProgressDialog loading;
     String volgendePloeg;
@@ -46,12 +45,14 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         buttonListGames = findViewById(R.id.btn_viewGames);
         buttonAanwezigheid = findViewById(R.id.btn_aanwezigheid);
         buttonPresentPlayers = findViewById(R.id.btn_presentPlayers);
-        buttonGoalsAndAssists = findViewById(R.id.btn_goalsAssists);
+        buttonGoalsAndAssists = findViewById(R.id.btn_goalsAndAssistsRanking);
+        buttonEditGoalsAndAssists = findViewById(R.id.btn_editGoalsAssists);
         nextGame = (TextView)findViewById(R.id.tv_nextGame);
         buttonListGames.setOnClickListener(this);
         buttonAanwezigheid.setOnClickListener(this);
         buttonPresentPlayers.setOnClickListener(this);
         buttonGoalsAndAssists.setOnClickListener(this);
+        buttonEditGoalsAndAssists.setOnClickListener(this);
 
         Intent intentLogin = getIntent();
         String userName = intentLogin.getStringExtra("userName");
@@ -69,6 +70,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         }
 
         if(v==buttonGoalsAndAssists){
+
+            Intent intent = new Intent(getApplicationContext(), GARanking.class);
+            startActivity(intent);
+        }
+
+        if(v==buttonEditGoalsAndAssists){
 
             Intent intent = new Intent(getApplicationContext(), GoalsAndAssists.class);
             startActivity(intent);

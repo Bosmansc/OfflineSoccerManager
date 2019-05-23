@@ -2,14 +2,14 @@ package bosmans.frigo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
+import android.widget.SimpleAdapter;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,30 +21,56 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
+import java.util.HashMap;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
-public class GoalsAndAssists extends AppCompatActivity implements View.OnClickListener{
+public class GARanking extends AppCompatActivity implements View.OnClickListener{
 
-    ListView listVieweditGoals;
-    ProgressDialog loading;
-    Button buttonSaveGoalsAssists;
+        ListView listView;
+        ProgressDialog loading;
+        Button buttonEditGoalsAssists;
+        ListAdapter adapter;
 
-    private String[] playerList = new String[]{"Cederic", "Simon", "Vince", "Lowie","Jolan"};
-
-    public static ArrayList<ModelGoals> modelArrayList;
-    public static ArrayList<ModelGoals> modelArrayList2;
-    private CustomAdapter customAdapter;
-
-    @Override
+        @Override
         protected void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_goals_and_assists);
+            setContentView(R.layout.activity_garanking);
 
-            listVieweditGoals = findViewById(R.id.listView_editGoals);
+            listView = findViewById(R.id.lv_goals);
 
-            buttonSaveGoalsAssists = findViewById(R.id.btn_saveGoalsAssists);
-            buttonSaveGoalsAssists.setOnClickListener(this);
+            buttonEditGoalsAssists = findViewById(R.id.btn_goalsAssistsToevoegen);
+            buttonEditGoalsAssists.setOnClickListener(this);
 
             String getOrEdit = "get";
             getGoals(getOrEdit);
@@ -53,45 +79,13 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onClick(View v) {
 
-            if (v == buttonSaveGoalsAssists) {
-                Intent intent = new Intent(GoalsAndAssists.this,NextActivity.class);
+            if (v == buttonEditGoalsAssists) {
+                Intent intent = new Intent(GARanking.this,GoalsAndAssists.class);
                 startActivity(intent);
             }
         }
 
-    private ArrayList<ModelGoals> getModel(){
-        ArrayList<ModelGoals> modelGoalsArrayList = new ArrayList<>();
-        for(int i = 0; i < 5; i++){
-
-            ModelGoals modelGoals = new ModelGoals();
-            modelGoals.setNumber(1);
-            modelGoals.setplayer(playerList[i]);
-            modelGoalsArrayList.add(modelGoals);
-        }
-        return modelGoalsArrayList;
-    }
-
-    private ArrayList<ModelGoals> getModel2(JSONArray jarray) throws JSONException {
-        ArrayList<ModelGoals> modelGoalsArrayList = new ArrayList<>();
-        for (int i = 0; i < jarray.length(); i++) {
-
-            JSONObject jo = jarray.getJSONObject(i);
-            String speler = jo.getString("spelerNaam");
-            int goals = jo.getInt("Goals");
-
-            // add items to list
-
-            ModelGoals modelGoals = new ModelGoals();
-            modelGoals.setNumber(goals);
-            modelGoals.setplayer(speler);
-            modelGoalsArrayList.add(modelGoals);
-
-
-        }
-        return modelGoalsArrayList;
-    }
-
-    private void getGoals(final String getOrEdit) {
+        private void getGoals(final String getOrEdit) {
 
             loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
 
@@ -120,8 +114,8 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
 
         private void parseItems(String jsonResposnce, String getOrEdit) {
 
+            ArrayList<HashMap<String, String>> list = new ArrayList<>();
             try {
-                ArrayList<ModelGoals> modelArrayList = new ArrayList<>();
                 JSONObject jobj = new JSONObject(jsonResposnce);
                 JSONArray jarray = jobj.getJSONArray("Goals");
 
@@ -129,31 +123,30 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
 
                     JSONObject jo = jarray.getJSONObject(i);
                     String speler = jo.getString("spelerNaam");
-                    int goals = jo.getInt("Goals");
+                    String goals = jo.getString("Goals");
 
-                    // add items to list
-                    if(!speler.isEmpty() && goals < 0) {
-                        ModelGoals modelGoals = new ModelGoals();
-                        modelGoals.setNumber(goals);
-                        modelGoals.setplayer(speler);
-                        modelArrayList.add(modelGoals);
+                    // add items to hashMap
+                    HashMap<String, String> item = new HashMap<>();
+                    if(!speler.isEmpty()) {
+                        item.put("Speler", speler);
+                        item.put("Goals", goals);
+                        list.add(item);
                     }
 
                 }
-
-                modelArrayList2 = getModel2(jarray);
-                modelArrayList = getModel();
-                customAdapter = new CustomAdapter(this);
-                listVieweditGoals.setAdapter(customAdapter);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-
-
+            if(getOrEdit  == "get"){
+                adapter = new SimpleAdapter(this, list, R.layout.activity_goals_and_assists_rows,
+                        new String[]{"Speler", "Goals"}, new int[]{R.id.tv_speler, R.id.tv_goals});
+            }
+            else if (getOrEdit == "edit"){
+                adapter = new SimpleAdapter(this, list, R.layout.activity_goals_and_assists_rows,
+                        new String[]{"Speler", "Goals"}, new int[]{R.id.tv_speler, R.id.tv_goals});
+            }
+            listView.setAdapter(adapter);
             loading.dismiss();
         }
-
-
     }
