@@ -9,12 +9,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/applogopngdraw"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/applogopngdraw"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GoalsAndAssists"></activity>
+        <activity android:name=".GoalsAndAssistsDetails"></activity>
+        <activity android:name=".GoalsAndAssists" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +27,7 @@
         <activity android:name=".AddPlayerToGame" />
         <activity android:name=".ListAllGames" />
         <activity android:name=".NextGame" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

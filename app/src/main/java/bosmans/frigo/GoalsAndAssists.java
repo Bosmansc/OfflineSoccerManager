@@ -1,12 +1,18 @@
 package bosmans.frigo;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,6 +43,17 @@ public class GoalsAndAssists extends AppCompatActivity {
             setContentView(R.layout.activity_goals_and_assists);
 
             listView = findViewById(R.id.lv_goals);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                    // Then you start a new Activity via Intent
+                    Intent intent = new Intent();
+                    intent.setClass(GoalsAndAssists.this, GoalsAndAssistsDetails.class);
+                    intent.putExtra("position", position);
+                    intent.putExtra("id", id);
+                    startActivity(intent);
+                }
+            });
 
             getGoals();
 
@@ -95,7 +112,7 @@ public class GoalsAndAssists extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            
+
             adapter = new SimpleAdapter(this,list,R.layout.activity_goals_and_assists_rows,
                     new String[]{"Speler","Goals"},new int[]{R.id.tv_speler,R.id.tv_goals});
 
