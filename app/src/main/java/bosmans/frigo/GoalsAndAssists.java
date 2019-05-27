@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -23,112 +24,43 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class GoalsAndAssists extends AppCompatActivity implements View.OnClickListener{
+public class GoalsAndAssists extends AppCompatActivity implements View.OnClickListener {
 
     ListView listVieweditGoals;
     ProgressDialog loading;
     Button buttonSaveGoalsAssists;
-
-    private String[] playerList = new String[]{"Cederic", "Simon", "Vince", "Lowie","Jolan"};
-
     public static ArrayList<ModelGoals> modelArrayList = new ArrayList<>();
-    public static ArrayList<ModelGoals> modelArrayList2;
     private CustomAdapter customAdapter;
 
     @Override
-        protected void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_goals_and_assists);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_goals_and_assists);
 
-            listVieweditGoals = findViewById(R.id.listView_editGoals);
+        listVieweditGoals = findViewById(R.id.listView_editGoals);
+        buttonSaveGoalsAssists = findViewById(R.id.btn_saveGoalsAssists);
+        buttonSaveGoalsAssists.setOnClickListener(this);
 
-            buttonSaveGoalsAssists = findViewById(R.id.btn_saveGoalsAssists);
-            buttonSaveGoalsAssists.setOnClickListener(this);
-
-            String sURL = "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals"; //just a string
-
-
-            getGames();
-
-        //    customAdapter = new CustomAdapter(this);
-         //  listVieweditGoals.setAdapter(customAdapter);
-        }
-
-        @Override
-        public void onClick(View v) {
-
-            if (v == buttonSaveGoalsAssists) {
-                Intent intent = new Intent(GoalsAndAssists.this,NextActivity.class);
-                startActivity(intent);
-            }
-        }
-
-    private ArrayList<ModelGoals> getModel(){
-        ArrayList<ModelGoals> modelGoalsArrayList = new ArrayList<>();
-        for(int i = 0; i < 5; i++){
-
-            ModelGoals modelGoals = new ModelGoals();
-            modelGoals.setNumber(1);
-            modelGoals.setplayer(playerList[i]);
-            modelGoalsArrayList.add(modelGoals);
-        }
-        return modelGoalsArrayList;
+        getGoals();
     }
 
-    private ArrayList<ModelGoals> getModel2(JSONArray jarray) throws JSONException {
-        ArrayList<ModelGoals> modelGoalsArrayList = new ArrayList<>();
-        for (int i = 0; i < jarray.length(); i++) {
+    @Override
+    public void onClick(View v) {
 
-            JSONObject jo = jarray.getJSONObject(i);
-            String speler = jo.getString("spelerNaam");
-            int goals = jo.getInt("Goals");
+        if (v == buttonSaveGoalsAssists) {
 
-            // add items to list
-
-            ModelGoals modelGoals = new ModelGoals();
-            modelGoals.setNumber(goals);
-            modelGoals.setplayer(speler);
-            modelGoalsArrayList.add(modelGoals);
-
-
+            editGoals();
+            Intent intent = new Intent(GoalsAndAssists.this, MainActivity.class);
+            startActivity(intent);
         }
-        return modelGoalsArrayList;
     }
 
     private void getGoals() {
 
-            loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
-
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals",
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-
-                            parseItems(response);
-
-                        }
-                    },
-
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                        }
-                    }
-            );
-
-            int socketTimeOut = 50000;
-            RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-            stringRequest.setRetryPolicy(policy);
-            RequestQueue queue = Volley.newRequestQueue(this);
-            queue.add(stringRequest);
-
-
-    }
-
-    private void getGames() {
-
-        loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
+        loading = ProgressDialog.show(this, "Loading", "Even geduld", false, true);
         ArrayList<ModelGoals> modelArrayList = new ArrayList<>();
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals",
@@ -157,36 +89,80 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
     }
 
 
-        private void parseItems(String jsonResposnce) {
+    private void parseItems(String jsonResposnce) {
 
-            try {
-                ArrayList<ModelGoals> modelArrayListGevuld = new ArrayList<>();
-                JSONObject jobj = new JSONObject(jsonResposnce);
-                JSONArray jarray = jobj.getJSONArray("Goals");
+        try {
+            ArrayList<ModelGoals> modelArrayListGevuld = new ArrayList<>();
+            JSONObject jobj = new JSONObject(jsonResposnce);
+            JSONArray jarray = jobj.getJSONArray("Goals");
 
-                for (int i = 0; i < jarray.length(); i++) {
+            for (int i = 0; i < jarray.length(); i++) {
 
-                    JSONObject jo = jarray.getJSONObject(i);
-                    String speler = jo.getString("spelerNaam");
-                    int goals = jo.getInt("Goals");
+                JSONObject jo = jarray.getJSONObject(i);
+                String speler = jo.getString("spelerNaam");
+                int goals = jo.getInt("Goals");
 
-                    // add items to list
-                    if(!speler.isEmpty() && goals > 0) {
-                        ModelGoals modelGoals = new ModelGoals();
-                        modelGoals.setNumber(goals);
-                        modelGoals.setplayer(speler);
-                        modelArrayListGevuld.add(modelGoals);
-                    }
-
+                // add items to list
+                if (!speler.isEmpty() && goals > 0) {
+                    ModelGoals modelGoals = new ModelGoals();
+                    modelGoals.setNumber(goals);
+                    modelGoals.setplayer(speler);
+                    modelArrayListGevuld.add(modelGoals);
                 }
-
-                modelArrayList = modelArrayListGevuld;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+            modelArrayList = modelArrayListGevuld;
 
-            loading.dismiss();
-
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        loading.dismiss();
     }
+
+    private void editGoals(){
+        loading = ProgressDialog.show(this, "Loading", "Even geduld", false, true);
+        for(ModelGoals mg : modelArrayList) {
+            String speler = mg.getplayer();
+            int goals = mg.getNumber();
+            editGoalsInSheet(speler, goals);
+        }
+        loading.dismiss();
+    }
+
+
+    private void editGoalsInSheet(final String speler, final int goals) {
+
+        String URL = "https://script.google.com/macros/s/AKfycbzSHMqlIqzIo6PpPjTm1CqR1uamrCToVQN1qDIG0Q7sJP2ZD9A0/exec";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> parmas = new HashMap<>();
+
+                //here we pass params
+                parmas.put("action","editGoals");
+                parmas.put("speler",speler);
+                parmas.put("goals", String.valueOf(goals));
+
+                return parmas;
+            }
+        };
+
+        int socketTimeOut = 50000;// u can change this .. here it is 50 seconds
+
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(retryPolicy);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(stringRequest);
+    }
+}

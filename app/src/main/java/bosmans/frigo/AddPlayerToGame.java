@@ -134,8 +134,6 @@ public class AddPlayerToGame extends AppCompatActivity implements View.OnClickLi
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
-
                         Toast.makeText(AddPlayerToGame.this,response,Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                         startActivity(intent);

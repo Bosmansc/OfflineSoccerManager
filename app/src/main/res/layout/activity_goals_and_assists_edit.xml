@@ -35,7 +35,7 @@
 
 
     <Button
-        android:id="@+id/plus"
+        android:id="@+id/plusbutton"
         android:layout_width="13dp"
         android:layout_height="18dp"
         android:layout_marginStart="8dp"
@@ -70,19 +70,28 @@
         android:id="@+id/imageView3"
         android:layout_width="30dp"
         android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintStart_toEndOf="@+id/plus"
+        app:layout_constraintStart_toEndOf="@+id/plusbutton"
         app:srcCompat="@drawable/helpinghand" />
 
     <Button
         android:id="@+id/minus"
-        android:layout_width="30dp"
-        android:layout_height="38dp"
-        android:visibility="invisible"
+        android:layout_width="45dp"
+        android:layout_height="41dp"
+        android:alpha="0"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/number"
-        app:layout_constraintStart_toStartOf="@+id/plus" />
+        app:layout_constraintEnd_toStartOf="@+id/number" />
+
+    <Button
+        android:id="@+id/plus"
+        android:layout_width="40dp"
+        android:layout_height="41dp"
+        app:layout_constraintBottom_toBottomOf="@+id/number"
+        app:layout_constraintStart_toEndOf="@+id/number"
+        android:alpha="0"/>
 
 
 </android.support.constraint.ConstraintLayout>
