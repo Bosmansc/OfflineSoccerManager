@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -18,6 +17,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +32,7 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
 
     private String[] playerList = new String[]{"Cederic", "Simon", "Vince", "Lowie","Jolan"};
 
-    public static ArrayList<ModelGoals> modelArrayList;
+    public static ArrayList<ModelGoals> modelArrayList = new ArrayList<>();
     public static ArrayList<ModelGoals> modelArrayList2;
     private CustomAdapter customAdapter;
 
@@ -46,8 +46,13 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
             buttonSaveGoalsAssists = findViewById(R.id.btn_saveGoalsAssists);
             buttonSaveGoalsAssists.setOnClickListener(this);
 
-            String getOrEdit = "get";
-            getGoals(getOrEdit);
+            String sURL = "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals"; //just a string
+
+
+            getGames();
+
+        //    customAdapter = new CustomAdapter(this);
+         //  listVieweditGoals.setAdapter(customAdapter);
         }
 
         @Override
@@ -91,7 +96,7 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
         return modelGoalsArrayList;
     }
 
-    private void getGoals(final String getOrEdit) {
+    private void getGoals() {
 
             loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
 
@@ -99,7 +104,9 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            parseItems(response, getOrEdit);
+
+                            parseItems(response);
+
                         }
                     },
 
@@ -116,12 +123,44 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
             RequestQueue queue = Volley.newRequestQueue(this);
             queue.add(stringRequest);
 
-        }
 
-        private void parseItems(String jsonResposnce, String getOrEdit) {
+    }
+
+    private void getGames() {
+
+        loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
+        ArrayList<ModelGoals> modelArrayList = new ArrayList<>();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        parseItems(response);
+                        customAdapter = new CustomAdapter(GoalsAndAssists.this);
+                        listVieweditGoals.setAdapter(customAdapter);
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        );
+
+        int socketTimeOut = 50000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(stringRequest);
+
+    }
+
+
+        private void parseItems(String jsonResposnce) {
 
             try {
-                ArrayList<ModelGoals> modelArrayList = new ArrayList<>();
+                ArrayList<ModelGoals> modelArrayListGevuld = new ArrayList<>();
                 JSONObject jobj = new JSONObject(jsonResposnce);
                 JSONArray jarray = jobj.getJSONArray("Goals");
 
@@ -132,28 +171,22 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
                     int goals = jo.getInt("Goals");
 
                     // add items to list
-                    if(!speler.isEmpty() && goals < 0) {
+                    if(!speler.isEmpty() && goals > 0) {
                         ModelGoals modelGoals = new ModelGoals();
                         modelGoals.setNumber(goals);
                         modelGoals.setplayer(speler);
-                        modelArrayList.add(modelGoals);
+                        modelArrayListGevuld.add(modelGoals);
                     }
 
                 }
 
-                modelArrayList2 = getModel2(jarray);
-                modelArrayList = getModel();
-                customAdapter = new CustomAdapter(this);
-                listVieweditGoals.setAdapter(customAdapter);
+                modelArrayList = modelArrayListGevuld;
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-
-
             loading.dismiss();
+
         }
-
-
     }
