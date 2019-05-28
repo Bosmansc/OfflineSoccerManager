@@ -103,7 +103,7 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
                 int goals = jo.getInt("Goals");
 
                 // add items to list
-                if (!speler.isEmpty() && goals > 0) {
+                if (!speler.isEmpty()) {
                     ModelGoals modelGoals = new ModelGoals();
                     modelGoals.setNumber(goals);
                     modelGoals.setplayer(speler);

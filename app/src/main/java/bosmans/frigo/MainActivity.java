@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     private void getGame(final String string, final String userName){
 
-        loading =  ProgressDialog.show(this,"Loading","Even geduld " + userName,false,true);
+        loading =  ProgressDialog.show(this,"Loading","Even geduld ",false,true);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames",
                 new Response.Listener<String>() {
