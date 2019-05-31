@@ -25,7 +25,7 @@
 
 
     <ListView
-        android:id="@+id/lv_goals"
+        android:id="@+id/lv_goalsAndAssists"
         android:layout_width="366dp"
         android:layout_height="479dp"
         android:layout_marginStart="8dp"

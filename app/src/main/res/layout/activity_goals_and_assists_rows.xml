@@ -50,14 +50,24 @@
 
             <TextView
                 android:id="@+id/tv_goals"
-                android:layout_width="137dp"
+                android:layout_width="80dp"
+                android:layout_height="67dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:text="Goals"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/tv_assists"
+                app:layout_constraintTop_toTopOf="@+id/tv_speler" />
+
+            <TextView
+                android:id="@+id/tv_assists"
+                android:layout_width="80dp"
                 android:layout_height="67dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="20dp"
-                android:text="Goals"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_speler" />
+                app:layout_constraintTop_toTopOf="@+id/tv_goals" />
         </android.support.constraint.ConstraintLayout>
     </LinearLayout>
 

@@ -1,12 +1,12 @@
 package bosmans.frigo;
 import android.app.ProgressDialog;
 import bosmans.frigo.R;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,11 +15,9 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,20 +39,24 @@ public class PresentPlayers extends AppCompatActivity {
 
         listView = findViewById(R.id.lv_players);
 
-        getNextGame(); // nodig om juiste get request te kunnen doen (parameter ploeg is vereist)
+        Intent intentLogin = getIntent();
+        String userName = intentLogin.getStringExtra("userName");
+        String userPassword = intentLogin.getStringExtra("userPassword");
+        getNextGame(userPassword); // nodig om juiste get request te kunnen doen (parameter ploeg is vereist)
 
     }
 
     // use the following methods to get the next game (naam van de volgende ploeg, om de speler in de juiste kolom toe te voegen)
-    private void getNextGame(){
+    private void getNextGame(final String userPassword){
 
         loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
+        String URL = "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames&team=" + userPassword;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        parseItemsNextGame(response);
+                        parseItemsNextGame(response, userPassword);
                     }
                 },
 
@@ -76,7 +78,7 @@ public class PresentPlayers extends AppCompatActivity {
 
     }
 
-    private void parseItemsNextGame(String jsonResposnce) {
+    private void parseItemsNextGame(String jsonResposnce, String userPassword) {
         try {
             JSONObject jobj = new JSONObject(jsonResposnce);
             JSONArray jarray = jobj.getJSONArray("games");
@@ -101,7 +103,7 @@ public class PresentPlayers extends AppCompatActivity {
                 if(date.compareTo(convertedDate) < 0) // Return value > 0 , if convertedDate is after the date argument.
                 {
                     volgendePloeg = ploeg.replaceAll(" ","").replaceAll("'","");
-                    getPlayers();
+                    getPlayers(userPassword, volgendePloeg);
                     break;
                 }
 
@@ -115,14 +117,16 @@ public class PresentPlayers extends AppCompatActivity {
 
     // get the present players of the following game
 
-    private void getPlayers() {
+    private void getPlayers(final String userPassword, String volgendePloeg) {
 
-        String url = "https://script.google.com/macros/s/AKfycbxfBMmH64EOB4XSh2hsHfz682WCr5WrkuBvxEXXQqPJhv1rinc/exec?action=getPlayers&ploeg=" + volgendePloeg.replaceAll(" ","").replaceAll("'","");
+        volgendePloeg = volgendePloeg.replaceAll(" ","").replaceAll("'","");
+        String team = "&team=" + userPassword;
+        String url = "https://script.google.com/macros/s/AKfycbxfBMmH64EOB4XSh2hsHfz682WCr5WrkuBvxEXXQqPJhv1rinc/exec?action=getPlayers&ploeg=" + volgendePloeg + team;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        parseItems(response);
+                        parseItems(response, userPassword);
                     }
                 },
 
@@ -141,7 +145,7 @@ public class PresentPlayers extends AppCompatActivity {
 
     }
 
-    private void parseItems(String jsonResposnce) {
+    private void parseItems(String jsonResposnce, String userPassword) {
 
         ArrayList<HashMap<String, String>> list = new ArrayList<>();
 
@@ -170,8 +174,4 @@ public class PresentPlayers extends AppCompatActivity {
         listView.setAdapter(adapter);
         loading.dismiss();
     }
-
-
-
-
 }

@@ -25,37 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
 public class GARanking extends AppCompatActivity implements View.OnClickListener{
 
@@ -69,29 +38,38 @@ public class GARanking extends AppCompatActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_garanking);
 
-        listView = findViewById(R.id.lv_goals);
+        listView = findViewById(R.id.lv_goalsAndAssists);
 
         buttonEditGoalsAssists = findViewById(R.id.btn_goalsAssistsToevoegen);
         buttonEditGoalsAssists.setOnClickListener(this);
 
+        Intent intentLogin = getIntent();
+        String userPassword = intentLogin.getStringExtra("userPassword");
+
         String getOrEdit = "get";
-        getGoals(getOrEdit);
+        getGoals(getOrEdit, userPassword);
     }
 
     @Override
     public void onClick(View v) {
 
         if (v == buttonEditGoalsAssists) {
+            Intent intentLogin = getIntent();
+            String userPassword = intentLogin.getStringExtra("userPassword");
+            String userName = intentLogin.getStringExtra("userName");
             Intent intent = new Intent(GARanking.this,GoalsAndAssists.class);
+            intent.putExtra("userName", userName);
+            intent.putExtra("userPassword", userPassword);
             startActivity(intent);
+
         }
     }
 
-    private void getGoals(final String getOrEdit) {
+    private void getGoals(final String getOrEdit, final String userPassword) {
 
         loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals",
+        String URL = "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals&team=" + userPassword;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

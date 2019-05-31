@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     TextView nextGame;
     ProgressDialog loading;
     String volgendePloeg;
-    String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         Intent intentLogin = getIntent();
         String userName = intentLogin.getStringExtra("userName");
-        getGame("start", userName); // method to present the next game at the top of the screen
+        String userPassword = intentLogin.getStringExtra("userPassword");
+        getGame("start", userName, userPassword); // method to present the next game at the top of the screen
         Log.e("TAG", "Message");
     }
 
@@ -64,48 +64,71 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     public void onClick(View v) {
 
         if(v==buttonListGames){
+            Intent intentLogin = getIntent();
+            String userName = intentLogin.getStringExtra("userName");
+            String userPassword = intentLogin.getStringExtra("userPassword");
 
             Intent intent = new Intent(getApplicationContext(), ListAllGames.class);
+            intent.putExtra("userName", userName);
+            intent.putExtra("userPassword", userPassword);
             startActivity(intent);
+
         }
 
         if(v==buttonGoalsAndAssists){
+            Intent intentLogin = getIntent();
+            String userName = intentLogin.getStringExtra("userName");
+            String userPassword = intentLogin.getStringExtra("userPassword");
 
             Intent intent = new Intent(getApplicationContext(), GARanking.class);
+            intent.putExtra("userName", userName);
+            intent.putExtra("userPassword", userPassword);
             startActivity(intent);
         }
 
         if(v==buttonEditGoalsAndAssists){
+            Intent intentLogin = getIntent();
+            String userName = intentLogin.getStringExtra("userName");
+            String userPassword = intentLogin.getStringExtra("userPassword");
 
             Intent intent = new Intent(getApplicationContext(), GoalsAndAssists.class);
+            intent.putExtra("userName", userName);
+            intent.putExtra("userPassword", userPassword);
             startActivity(intent);
         }
 
         if(v==buttonAanwezigheid){
-
             Intent intentLogin = getIntent();
             String userName = intentLogin.getStringExtra("userName");
-            getGame("aanwezigheid", userName);
+            String userPassword = intentLogin.getStringExtra("userPassword");
+            getGame("aanwezigheid", userName, userPassword);
             buttonAanwezigheid.setEnabled(false);
         }
 
         if(v==buttonPresentPlayers){
+            Intent intentLogin = getIntent();
+            String userName = intentLogin.getStringExtra("userName");
+            String userPassword = intentLogin.getStringExtra("userPassword");
 
             Intent intent = new Intent(getApplicationContext(), PresentPlayers.class);
+            intent.putExtra("userName", userName);
+            intent.putExtra("userPassword", userPassword);
             startActivity(intent);
         }
 
     }
 
-    private void getGame(final String string, final String userName){
+    private void getGame(final String string, final String userName, final String userPassword){
 
         loading =  ProgressDialog.show(this,"Loading","Even geduld ",false,true);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames",
+        String URL = "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames&team=" + userPassword;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        parseItems(response, string, userName);
+                        parseItems(response, string, userName, userPassword);
                     }
                 },
 
@@ -125,7 +148,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     }
 
-    private void parseItems(String jsonResposnce, String string, String userName) {
+    private void parseItems(String jsonResposnce, String string, String userName, String userPassword) {
         try {
             JSONObject jobj = new JSONObject(jsonResposnce);
             JSONArray jarray = jobj.getJSONArray("games");
@@ -157,7 +180,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                     if(string == "aanwezigheid") {
                         volgendePloeg = ploeg;
-                        addNameToSheet(userName); // here the name is added to the sheet based on the next opponent
+                        addNameToSheet(userName, userPassword); // here the name is added to the sheet based on the next opponent
                     }
                     break;
                 }
@@ -173,7 +196,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     }
     //This is the part where data is transferred from Your Android phone to Sheet by using HTTP Rest API calls
 
-    private void addNameToSheet(final String userName) {
+    private void addNameToSheet(final String userName, final String userPassword) {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbzxsTjbi4wuds0wBuQW3PrLMaEvbnAD9_-X4ROOn7wGBIZoYEA/exec",
                 new Response.Listener<String>() {
@@ -197,6 +220,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 //here we pass params
                 parmas.put("action","addPlayer");
                 parmas.put("speler",userName);
+                parmas.put("team",userPassword);
                 parmas.put("ploeg",volgendePloeg.replaceAll(" ","").replaceAll("'",""));
 
                 return parmas;

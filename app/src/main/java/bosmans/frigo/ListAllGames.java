@@ -1,6 +1,7 @@
 package bosmans.frigo;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -39,15 +40,19 @@ public class ListAllGames extends AppCompatActivity {
 
         listView = findViewById(R.id.lv_games);
 
-        getGames();
+        Intent intentLogin = getIntent();
+        String userName = intentLogin.getStringExtra("userName");
+        String userPassword = intentLogin.getStringExtra("userPassword");
+
+        getGames(userPassword);
 
     }
 
-    private void getGames() {
+    private void getGames(String userPassword) {
 
         loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames",
+        String URL = "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames&team=" + userPassword;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

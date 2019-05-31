@@ -44,26 +44,34 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
         buttonSaveGoalsAssists = findViewById(R.id.btn_saveGoalsAssists);
         buttonSaveGoalsAssists.setOnClickListener(this);
 
-        getGoals();
+        Intent intentLogin = getIntent();
+        String userPassword = intentLogin.getStringExtra("userPassword");
+
+        getGoals(userPassword);
     }
 
     @Override
     public void onClick(View v) {
+        Intent intentLogin = getIntent();
+        String userPassword = intentLogin.getStringExtra("userPassword");
+        String userName = intentLogin.getStringExtra("userName");
 
         if (v == buttonSaveGoalsAssists) {
 
-            editGoals();
+            editGoals(userPassword);
             Intent intent = new Intent(GoalsAndAssists.this, MainActivity.class);
+            intent.putExtra("userName", userName);
+            intent.putExtra("userPassword", userPassword);
             startActivity(intent);
         }
     }
 
-    private void getGoals() {
+    private void getGoals(String userPassword) {
 
         loading = ProgressDialog.show(this, "Loading", "Even geduld", false, true);
         ArrayList<ModelGoals> modelArrayList = new ArrayList<>();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals",
+        String URL = "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals&team=" + userPassword;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -118,18 +126,19 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
         loading.dismiss();
     }
 
-    private void editGoals(){
+    private void editGoals(String userPassword){
         loading = ProgressDialog.show(this, "Loading", "Even geduld", false, true);
         for(ModelGoals mg : modelArrayList) {
             String speler = mg.getplayer();
             int goals = mg.getNumber();
-            editGoalsInSheet(speler, goals);
+            editGoalsInSheet(speler, goals, userPassword);
         }
         loading.dismiss();
+
     }
 
 
-    private void editGoalsInSheet(final String speler, final int goals) {
+    private void editGoalsInSheet(final String speler, final int goals, final String userPassword) {
 
         String URL = "https://script.google.com/macros/s/AKfycbzSHMqlIqzIo6PpPjTm1CqR1uamrCToVQN1qDIG0Q7sJP2ZD9A0/exec";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
@@ -153,6 +162,7 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
                 parmas.put("action","editGoals");
                 parmas.put("speler",speler);
                 parmas.put("goals", String.valueOf(goals));
+                parmas.put("team",userPassword);
 
                 return parmas;
             }
