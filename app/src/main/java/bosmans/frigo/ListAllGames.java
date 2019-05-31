@@ -89,6 +89,7 @@ public class ListAllGames extends AppCompatActivity {
                 String gameDate = jo.getString("Date");
                 String ploeg = jo.getString("Ploeg");
                 String plaats = jo.getString("Plaats");
+                String score = jo.getString("Score");
 
                 // String to date and add 2 hours
                 SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -98,13 +99,17 @@ public class ListAllGames extends AppCompatActivity {
                 cal.setTime(convertedDate);
                 cal.add(Calendar.HOUR, 2);
                 convertedDate = cal.getTime();
+
+                SimpleDateFormat outputFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy");
                 String gameConvDate = destFormat.format(convertedDate);
+                String outputDate = outputFormat.format(convertedDate);
 
                 // add items to hashMap
                 HashMap<String, String> item = new HashMap<>();
-                item.put("Date", gameConvDate);
+                item.put("Date", outputDate);
                 item.put("Ploeg", ploeg);
                 item.put("Plaats",plaats);
+                item.put("Score",score);
 
                 list.add(item);
             }
@@ -116,7 +121,7 @@ public class ListAllGames extends AppCompatActivity {
         }
 
         adapter = new SimpleAdapter(this,list,R.layout.activity_list_all_games_row,
-                new String[]{"Ploeg","Plaats","Date"},new int[]{R.id.tv_speler,R.id.tv_plaats,R.id.tv_ploeg});
+                new String[]{"Ploeg","Plaats","Date","Score"},new int[]{R.id.tv_speler,R.id.tv_plaats,R.id.tv_ploeg, R.id.tv_score});
 
         listView.setAdapter(adapter);
         loading.dismiss();

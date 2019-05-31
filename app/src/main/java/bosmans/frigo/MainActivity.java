@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     TextView nextGame;
     ProgressDialog loading;
     String volgendePloeg;
+    String userPassword = "FL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         Intent intentLogin = getIntent();
         String userName = intentLogin.getStringExtra("userName");
-        String userPassword = intentLogin.getStringExtra("userPassword");
+        userPassword = intentLogin.getStringExtra("userPassword");
         getGame("start", userName, userPassword); // method to present the next game at the top of the screen
         Log.e("TAG", "Message");
     }
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         if(v==buttonListGames){
             Intent intentLogin = getIntent();
             String userName = intentLogin.getStringExtra("userName");
-            String userPassword = intentLogin.getStringExtra("userPassword");
+            userPassword = intentLogin.getStringExtra("userPassword");
 
             Intent intent = new Intent(getApplicationContext(), ListAllGames.class);
             intent.putExtra("userName", userName);
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         if(v==buttonGoalsAndAssists){
             Intent intentLogin = getIntent();
             String userName = intentLogin.getStringExtra("userName");
-            String userPassword = intentLogin.getStringExtra("userPassword");
+            userPassword = intentLogin.getStringExtra("userPassword");
 
             Intent intent = new Intent(getApplicationContext(), GARanking.class);
             intent.putExtra("userName", userName);
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         if(v==buttonEditGoalsAndAssists){
             Intent intentLogin = getIntent();
             String userName = intentLogin.getStringExtra("userName");
-            String userPassword = intentLogin.getStringExtra("userPassword");
+            userPassword = intentLogin.getStringExtra("userPassword");
 
             Intent intent = new Intent(getApplicationContext(), GoalsAndAssists.class);
             intent.putExtra("userName", userName);
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         if(v==buttonAanwezigheid){
             Intent intentLogin = getIntent();
             String userName = intentLogin.getStringExtra("userName");
-            String userPassword = intentLogin.getStringExtra("userPassword");
+            userPassword = intentLogin.getStringExtra("userPassword");
             getGame("aanwezigheid", userName, userPassword);
             buttonAanwezigheid.setEnabled(false);
         }
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         if(v==buttonPresentPlayers){
             Intent intentLogin = getIntent();
             String userName = intentLogin.getStringExtra("userName");
-            String userPassword = intentLogin.getStringExtra("userPassword");
+            userPassword = intentLogin.getStringExtra("userPassword");
 
             Intent intent = new Intent(getApplicationContext(), PresentPlayers.class);
             intent.putExtra("userName", userName);
