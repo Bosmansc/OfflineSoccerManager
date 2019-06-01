@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void validate(String userName, String userPassword){
-        if((userPassword.equals("FL") || userPassword.equals("DQS")) && !userName.isEmpty()){
+        if((userPassword.equals("FL") || userPassword.equals("DQS") || userPassword.equals("RA") ) && !userName.isEmpty()){
             Intent intent =  new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra("userName", userName);
             intent.putExtra("userPassword", userPassword);

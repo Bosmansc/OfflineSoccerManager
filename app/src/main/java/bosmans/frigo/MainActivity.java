@@ -57,7 +57,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         Intent intentLogin = getIntent();
         String userName = intentLogin.getStringExtra("userName");
         userPassword = intentLogin.getStringExtra("userPassword");
-        getGame("start", userName, userPassword); // method to present the next game at the top of the screen
+
+        // method to present the next game at the top of the screen
+        getGame("start", userName, userPassword);
         Log.e("TAG", "Message");
     }
 
@@ -170,6 +172,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 cal.add(Calendar.HOUR, 2);
                 convertedDate = cal.getTime();
                 Date date = new Date();
+                SimpleDateFormat outputFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy");
+                String outputDate = outputFormat.format(convertedDate);
 
                 if(date.compareTo(convertedDate) < 0) // Return value > 0 , if convertedDate is after the date argument.
                 {
@@ -177,7 +181,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     String gameConvDate = destFormat.format(convertedDate);
 
                     if(string == "start")
-                    nextGame.setText("Volgende wedstrijd  \n \n" + ploeg + " \n \n" + gameConvDate );
+                    nextGame.setText("Volgende wedstrijd  \n \n" + ploeg + " \n \n" + outputDate );
 
                     if(string == "aanwezigheid") {
                         volgendePloeg = ploeg;
@@ -195,6 +199,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         loading.dismiss();
     }
+
     //This is the part where data is transferred from Your Android phone to Sheet by using HTTP Rest API calls
 
     private void addNameToSheet(final String userName, final String userPassword) {
