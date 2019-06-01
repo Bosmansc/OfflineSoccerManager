@@ -100,7 +100,7 @@ public class ListAllGames extends AppCompatActivity {
                 cal.add(Calendar.HOUR, 2);
                 convertedDate = cal.getTime();
 
-                SimpleDateFormat outputFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("EEE, d MMM HH:mm");
                 String gameConvDate = destFormat.format(convertedDate);
                 String outputDate = outputFormat.format(convertedDate);
 

@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 cal.add(Calendar.HOUR, 2);
                 convertedDate = cal.getTime();
                 Date date = new Date();
-                SimpleDateFormat outputFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("EEE, d MMM HH:mm");
                 String outputDate = outputFormat.format(convertedDate);
 
                 if(date.compareTo(convertedDate) < 0) // Return value > 0 , if convertedDate is after the date argument.

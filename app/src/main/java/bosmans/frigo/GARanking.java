@@ -123,8 +123,11 @@ public class GARanking extends AppCompatActivity implements View.OnClickListener
             @Override
             public int compare(HashMap<String, String> lhs,
                                HashMap<String, String> rhs) {
-                // Do your comparison logic here and retrn accordingly.
-                return rhs.get("Goals").compareTo(lhs.get("Goals"));
+                // Do your comparison logic here and return accordingly.
+                Integer one = Integer.parseInt(rhs.get("Goals"));
+                Integer two = Integer.parseInt(lhs.get("Goals"));
+
+                return one.compareTo(two);
             }
         });
 
