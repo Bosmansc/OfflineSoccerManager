@@ -3,6 +3,7 @@ package bosmans.frigo;
 public class ModelGoals {
 
         private int number;
+        private int assists;
         private String player;
 
         public int getNumber() {
@@ -13,6 +14,14 @@ public class ModelGoals {
             this.number = number;
         }
 
+        public int getAssists() {
+            return assists;
+        }
+
+        public void setAssists(int assists) {
+            this.assists = assists;
+        }
+
         public String getplayer() {
             return player;
         }
@@ -20,4 +29,6 @@ public class ModelGoals {
         public void setplayer(String player) {
             this.player = player;
         }
+
+
     }

@@ -70,7 +70,7 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
 
         loading = ProgressDialog.show(this, "Loading", "Even geduld", false, true);
         ArrayList<ModelGoals> modelArrayList = new ArrayList<>();
-        String URL = "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals&team=" + userPassword;
+        String URL = "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoalsAndAssists&team=" + userPassword;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -109,12 +109,14 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
                 JSONObject jo = jarray.getJSONObject(i);
                 String speler = jo.getString("spelerNaam");
                 int goals = jo.getInt("Goals");
+                int assists = jo.getInt("Assists");
 
                 // add items to list
                 if (!speler.isEmpty()) {
                     ModelGoals modelGoals = new ModelGoals();
                     modelGoals.setNumber(goals);
                     modelGoals.setplayer(speler);
+                    modelGoals.setAssists(assists);
                     modelArrayListGevuld.add(modelGoals);
                 }
             }
@@ -131,14 +133,15 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
         for(ModelGoals mg : modelArrayList) {
             String speler = mg.getplayer();
             int goals = mg.getNumber();
-            editGoalsInSheet(speler, goals, userPassword);
+            int assists = mg.getAssists();
+            editGoalsInSheet(speler, goals, assists, userPassword);
         }
         loading.dismiss();
 
     }
 
 
-    private void editGoalsInSheet(final String speler, final int goals, final String userPassword) {
+    private void editGoalsInSheet(final String speler, final int goals, final int assists, final String userPassword) {
 
         String URL = "https://script.google.com/macros/s/AKfycbzSHMqlIqzIo6PpPjTm1CqR1uamrCToVQN1qDIG0Q7sJP2ZD9A0/exec";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
@@ -159,9 +162,10 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
                 Map<String, String> parmas = new HashMap<>();
 
                 //here we pass params
-                parmas.put("action","editGoals");
+                parmas.put("action","editGoalsAndAssists");
                 parmas.put("speler",speler);
                 parmas.put("goals", String.valueOf(goals));
+                parmas.put("assists", String.valueOf(assists));
                 parmas.put("team",userPassword);
 
                 return parmas;

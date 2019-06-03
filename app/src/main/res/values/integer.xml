@@ -6,4 +6,9 @@
     <integer name="btn_minus_view">3</integer>
     <integer name="btn_minus_pos">4</integer>
 
+    <integer name="btn_plusAssists_view">5</integer>
+    <integer name="btn_plusAssists_pos">6</integer>
+    <integer name="btn_minusAssists_view">7</integer>
+    <integer name="btn_minusAssists_pos">8</integer>
+
 </resources>

@@ -5,7 +5,6 @@
     android:id="@+id/constraintLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#10FFFFFF"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp">
 
@@ -16,7 +15,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:background="#10FFFFFF"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,9 +25,9 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#10FFFFFF"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toTopOf="@+id/tv_plaats"
-            app:layout_constraintTop_toTopOf="@+id/tv_plaats"
+            app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="5dp">
 
             <TextView
@@ -50,10 +48,10 @@
 
             <TextView
                 android:id="@+id/tv_goals"
-                android:layout_width="80dp"
-                android:layout_height="67dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_width="37dp"
+                android:layout_height="69dp"
+                android:layout_marginEnd="55dp"
+                android:layout_marginRight="55dp"
                 android:text="Goals"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toStartOf="@+id/tv_assists"
@@ -61,14 +59,40 @@
 
             <TextView
                 android:id="@+id/tv_assists"
-                android:layout_width="80dp"
-                android:layout_height="67dp"
+                android:layout_width="35dp"
+                android:layout_height="69dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="20dp"
+                android:text="Assists"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_goals" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="43dp"
+                android:layout_height="39dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginRight="7dp"
+                app:layout_constraintEnd_toStartOf="@+id/tv_goals"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/goal" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="43dp"
+                android:layout_height="39dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginRight="7dp"
+
+                app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+                app:layout_constraintEnd_toStartOf="@+id/tv_assists"
+                app:srcCompat="@drawable/helpinghand" />
+
         </android.support.constraint.ConstraintLayout>
     </LinearLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

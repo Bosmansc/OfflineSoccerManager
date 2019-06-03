@@ -69,7 +69,7 @@ public class GARanking extends AppCompatActivity implements View.OnClickListener
     private void getGoals(final String getOrEdit, final String userPassword) {
 
         loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
-        String URL = "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoals&team=" + userPassword;
+        String URL = "https://script.google.com/macros/s/AKfycbylmEy_nkO6YklJlOlAHDChhckvpWPaTRyaEP26wPFLuctU_5k/exec?action=getGoalsAndAssists&team=" + userPassword;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -105,12 +105,14 @@ public class GARanking extends AppCompatActivity implements View.OnClickListener
                 JSONObject jo = jarray.getJSONObject(i);
                 String speler = jo.getString("spelerNaam");
                 String goals = jo.getString("Goals");
+                String assists = jo.getString("Assists");
 
                 // add items to hashMap
                 HashMap<String, String> item = new HashMap<>();
                 if(!speler.isEmpty()) {
                     item.put("Speler", speler);
                     item.put("Goals", goals);
+                    item.put("Assists", assists);
                     list.add(item);
                 }
 
@@ -134,11 +136,11 @@ public class GARanking extends AppCompatActivity implements View.OnClickListener
 
         if(getOrEdit  == "get"){
             adapter = new SimpleAdapter(this, list, R.layout.activity_goals_and_assists_rows,
-                    new String[]{"Speler", "Goals"}, new int[]{R.id.tv_speler, R.id.tv_goals});
+                    new String[]{"Speler", "Goals", "Assists"}, new int[]{R.id.tv_speler, R.id.tv_goals, R.id.tv_assists});
         }
         else if (getOrEdit == "edit"){
             adapter = new SimpleAdapter(this, list, R.layout.activity_goals_and_assists_rows,
-                    new String[]{"Speler", "Goals"}, new int[]{R.id.tv_speler, R.id.tv_goals});
+                    new String[]{"Speler", "Goals","Assists"}, new int[]{R.id.tv_speler, R.id.tv_goals, R.id.tv_assists});
         }
         listView.setAdapter(adapter);
         loading.dismiss();

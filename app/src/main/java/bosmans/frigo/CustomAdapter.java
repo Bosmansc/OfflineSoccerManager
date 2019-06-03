@@ -54,8 +54,11 @@ public class CustomAdapter extends BaseAdapter {
 
             holder.tvSpeler = (TextView) convertView.findViewById(R.id.speler);
             holder.tvnumber = (TextView) convertView.findViewById(R.id.number);
+            holder.tvAssists = (TextView) convertView.findViewById(R.id.numberAssist);
             holder.btn_plus = (Button) convertView.findViewById(R.id.plus);
+            holder.btn_plusAssists = (Button) convertView.findViewById(R.id.plusAssists);
             holder.btn_minus = (Button) convertView.findViewById(R.id.minus);
+            holder.btn_minusAssists = (Button) convertView.findViewById(R.id.minusAssist);
 
             convertView.setTag(holder);
         }else {
@@ -65,7 +68,10 @@ public class CustomAdapter extends BaseAdapter {
 
         holder.tvSpeler.setText(GoalsAndAssists.modelArrayList.get(position).getplayer());
         holder.tvnumber.setText(String.valueOf(GoalsAndAssists.modelArrayList.get(position).getNumber()));
+        holder.tvAssists.setText(String.valueOf(GoalsAndAssists.modelArrayList.get(position).getAssists()));
 
+
+        // plus Goals button
         holder.btn_plus.setTag(R.integer.btn_plus_view, convertView);
         holder.btn_plus.setTag(R.integer.btn_plus_pos, position);
         holder.btn_plus.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +90,26 @@ public class CustomAdapter extends BaseAdapter {
             }
         });
 
+        // plus Assists button
+        holder.btn_plusAssists.setTag(R.integer.btn_plusAssists_view, convertView);
+        holder.btn_plusAssists.setTag(R.integer.btn_plusAssists_pos, position);
+        holder.btn_plusAssists.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                View tempview = (View) holder.btn_plusAssists.getTag(R.integer.btn_plusAssists_view);
+                TextView tvAssists = (TextView) tempview.findViewById(R.id.numberAssist);
+                Integer posAssists = (Integer) holder.btn_plusAssists.getTag(R.integer.btn_plusAssists_pos);
+
+                int numberAssists = Integer.parseInt(tvAssists.getText().toString()) + 1;
+                tvAssists.setText(String.valueOf(numberAssists));
+
+                GoalsAndAssists.modelArrayList.get(posAssists).setAssists(numberAssists);
+
+            }
+        });
+
+        // minus Goals button
         holder.btn_minus.setTag(R.integer.btn_minus_view, convertView);
         holder.btn_minus.setTag(R.integer.btn_minus_pos, position);
         holder.btn_minus.setOnClickListener(new View.OnClickListener() {
@@ -102,13 +128,32 @@ public class CustomAdapter extends BaseAdapter {
             }
         });
 
+        // minus Assists button
+        holder.btn_minusAssists.setTag(R.integer.btn_minusAssists_view, convertView);
+        holder.btn_minusAssists.setTag(R.integer.btn_minusAssists_pos, position);
+        holder.btn_minusAssists.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                View tempview = (View) holder.btn_minusAssists.getTag(R.integer.btn_minusAssists_view);
+                TextView tvAssists = (TextView) tempview.findViewById(R.id.numberAssist);
+                Integer posAssists = (Integer) holder.btn_minusAssists.getTag(R.integer.btn_minusAssists_pos);
+
+                int numberAssists = Integer.parseInt(tvAssists.getText().toString()) - 1;
+                tvAssists.setText(String.valueOf(numberAssists));
+
+                GoalsAndAssists.modelArrayList.get(posAssists).setAssists(numberAssists);
+
+            }
+        });
+
         return convertView;
     }
 
     private class ViewHolder {
 
-        protected Button btn_plus, btn_minus;
-        private TextView tvSpeler, tvnumber;
+        protected Button btn_plus, btn_minus, btn_minusAssists, btn_plusAssists;
+        private TextView tvSpeler, tvnumber, tvAssists;
 
     }
 }
