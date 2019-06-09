@@ -2,14 +2,15 @@ package bosmans.frigo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,9 +19,11 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -61,6 +64,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         // method to present the next game at the top of the screen
         getGame("start", userName, userPassword);
         Log.e("TAG", "Message");
+
+
     }
 
     @Override
@@ -71,7 +76,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             String userName = intentLogin.getStringExtra("userName");
             userPassword = intentLogin.getStringExtra("userPassword");
 
-            Intent intent = new Intent(getApplicationContext(), ListAllGames.class);
+            Intent intent = new Intent(getApplicationContext(), NotificationActivity.class);
             intent.putExtra("userName", userName);
             intent.putExtra("userPassword", userPassword);
             startActivity(intent);
@@ -239,4 +244,5 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(stringRequest);
     }
+
 }

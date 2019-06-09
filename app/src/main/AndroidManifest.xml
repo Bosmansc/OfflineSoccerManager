@@ -3,7 +3,8 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="bosmans.frigo">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- permission required to automatically restart a repeating alarm if the user reboots the device -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <dist:module dist:instant="true" />
 
@@ -14,7 +15,17 @@
         android:roundIcon="@drawable/applogopngdraw"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GARanking"></activity>
+        <!-- Register the Alarm Receiver -->
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".NotificationActivity" />
+        <activity android:name=".GARanking" />
         <activity android:name=".NextActivity" />
         <activity android:name=".GoalsAndAssists" />
         <activity android:name=".LoginActivity">
@@ -22,15 +33,14 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>/>
+            </intent-filter>
+            />
         </activity>
         <activity android:name=".PresentPlayers" />
         <activity android:name=".AddPlayerToGame" />
         <activity android:name=".ListAllGames" />
         <activity android:name=".NextGame" />
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

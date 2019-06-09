@@ -56,9 +56,9 @@ public class CustomAdapter extends BaseAdapter {
             holder.tvnumber = (TextView) convertView.findViewById(R.id.number);
             holder.tvAssists = (TextView) convertView.findViewById(R.id.numberAssist);
             holder.btn_plus = (Button) convertView.findViewById(R.id.plus);
-            holder.btn_plusAssists = (Button) convertView.findViewById(R.id.plusAssists);
+            holder.btn_plusAssists = convertView.findViewById(R.id.plusAssists);
             holder.btn_minus = (Button) convertView.findViewById(R.id.minus);
-            holder.btn_minusAssists = (Button) convertView.findViewById(R.id.minusAssist);
+            holder.btn_minusAssists = convertView.findViewById(R.id.minusAssists);
 
             convertView.setTag(holder);
         }else {
