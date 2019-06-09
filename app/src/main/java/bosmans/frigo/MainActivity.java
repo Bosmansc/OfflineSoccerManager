@@ -1,16 +1,18 @@
 package bosmans.frigo;
 
 import android.app.ProgressDialog;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,11 +21,9 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,6 +38,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     ProgressDialog loading;
     String volgendePloeg;
     String userPassword = "FL";
+    SwitchCompat reminderSwitch;
+    LocalData localData;
+    ClipboardManager myClipboard;
+    String TAG = "RemindMe";
+    public static int hours = 19;
+    public static int minutes = 49;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +63,33 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         buttonGoalsAndAssists.setOnClickListener(this);
         buttonEditGoalsAndAssists.setOnClickListener(this);
 
-        Intent intentLogin = getIntent();
-        String userName = intentLogin.getStringExtra("userName");
-        userPassword = intentLogin.getStringExtra("userPassword");
+        // notifications
+        localData = new LocalData(getApplicationContext());
+        myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        reminderSwitch = findViewById(R.id.reminderSwitch);
+        reminderSwitch.setChecked(localData.getReminderStatus());
+
+
+        reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                localData.setReminderStatus(isChecked);
+                if (isChecked) {
+                    Log.d(TAG, "onCheckedChanged: true");
+                    NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class, hours, minutes);
+                } else {
+                    Log.d(TAG, "onCheckedChanged: false");
+                    NotificationScheduler.cancelReminder(MainActivity.this, AlarmReceiver.class);
+                }
+
+            }
+        });
+
+      //  Intent intentLogin = getIntent();
+       // String userName = intentLogin.getStringExtra("userName");
+       // userPassword = intentLogin.getStringExtra("userPassword");
+        String userName = localData.get_username();
+        userPassword = localData.get_password();
 
         // method to present the next game at the top of the screen
         getGame("start", userName, userPassword);
@@ -76,7 +106,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             String userName = intentLogin.getStringExtra("userName");
             userPassword = intentLogin.getStringExtra("userPassword");
 
-            Intent intent = new Intent(getApplicationContext(), NotificationActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ListAllGames.class);
             intent.putExtra("userName", userName);
             intent.putExtra("userPassword", userPassword);
             startActivity(intent);

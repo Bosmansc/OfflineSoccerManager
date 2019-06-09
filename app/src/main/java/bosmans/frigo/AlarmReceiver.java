@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-/**
- * Created by Jaison on 17/06/17.
- */
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -25,7 +22,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 int hours = 12;
                 int minutes = 14;
 
-                NotificationScheduler.setReminder(context, AlarmReceiver.class, LoginActivity.hours, LoginActivity.minutes);
+                NotificationScheduler.setReminder(context, AlarmReceiver.class, MainActivity.hours, MainActivity.minutes);
                 return;
             }
         }
@@ -33,8 +30,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.d(TAG, "onReceive: ");
 
         //Trigger the notification
-        NotificationScheduler.addNotification(context, MainActivity.class,
-                "You have 5 unwatched videos", "Watch them now?");
+        NotificationScheduler.addNotification(context, MainActivity.class);
+       // NotificationScheduler.getGame(context, MainActivity.class, "Online Soccer manager", "Next game");
 
     }
 }

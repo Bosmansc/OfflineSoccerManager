@@ -2,6 +2,7 @@ package bosmans.frigo;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +13,7 @@ import android.widget.TextView;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static int hours = 12;
-    public static int minutes = 26;
+
     private EditText name;
     private EditText password;
     private int counter = 3;
@@ -21,6 +21,9 @@ public class LoginActivity extends AppCompatActivity {
     private TextView info;
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
+    LocalData localData;
+    ClipboardManager myClipboard;
+    String usernameRemembered, passwordRemembered;
 
 
     @Override
@@ -28,21 +31,32 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // remember username and password
+        localData = new LocalData(getApplicationContext());
+        myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+
         name = findViewById(R.id.et_naam);
         password = findViewById((R.id.et_password));
         login = findViewById(R.id.btn_login);
         info =  findViewById(R.id.tvInfo);
 
+        // get and set username and password from last time
+        usernameRemembered = localData.get_username();
+        passwordRemembered = localData.get_password();
+
+        // set user and password to previous login (empty string is default value)
+        name.setText(usernameRemembered);
+        password.setText(passwordRemembered);
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                localData.set_usernmae(name.getText().toString());
+                localData.set_password(password.getText().toString());
                 validate(name.getText().toString(), password.getText().toString());
             }
         });
 
-
-        // notifications
-        NotificationScheduler.setReminder(LoginActivity.this, AlarmReceiver.class, hours, minutes);
         }
 
 

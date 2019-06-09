@@ -24,7 +24,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".NotificationActivity" />
         <activity android:name=".GARanking" />
         <activity android:name=".NextActivity" />
         <activity android:name=".GoalsAndAssists" />

@@ -68,26 +68,48 @@
         android:id="@+id/imageView3"
         android:layout_width="30dp"
         android:layout_height="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/minusAssists"
-        app:layout_constraintEnd_toStartOf="@+id/minusAssists"
+        app:layout_constraintBottom_toBottomOf="@+id/minusAssistsbutton"
+        app:layout_constraintStart_toStartOf="@+id/imageView2"
         app:srcCompat="@drawable/helpinghand" />
 
     <Button
         android:id="@+id/minus"
-        android:layout_width="45dp"
+        android:layout_width="60dp"
         android:layout_height="41dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:alpha="0"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/number"
-        app:layout_constraintEnd_toStartOf="@+id/number" />
+        app:layout_constraintEnd_toEndOf="@+id/number" />
 
     <Button
         android:id="@+id/plus"
-        android:layout_width="40dp"
+        android:layout_width="60dp"
         android:layout_height="41dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:alpha="0"
         app:layout_constraintBottom_toBottomOf="@+id/number"
-        app:layout_constraintStart_toEndOf="@+id/number" />
+        app:layout_constraintStart_toEndOf="@+id/minusbutton" />
+
+    <Button
+        android:id="@+id/minusAssist"
+        android:layout_width="60dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="20dp"
+        android:alpha="0"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/minus"
+        app:layout_constraintTop_toTopOf="@+id/speler" />
+
+    <Button
+        android:id="@+id/plusAssists"
+        android:layout_width="60dp"
+        android:layout_height="41dp"
+        android:alpha="0"
+        app:layout_constraintBottom_toBottomOf="@+id/numberAssist"
+        app:layout_constraintStart_toStartOf="@+id/plus" />
 
     <TextView
         android:id="@+id/numberAssist"
@@ -96,25 +118,28 @@
         android:text="13"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintStart_toEndOf="@+id/minus"
-        app:layout_constraintTop_toBottomOf="@+id/speler" />
+        app:layout_constraintBottom_toBottomOf="@+id/minusAssist"
+        app:layout_constraintEnd_toStartOf="@+id/plusbutton" />
 
-    <ImageButton
-        android:id="@+id/minusAssists"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/numberAssist"
-        app:layout_constraintEnd_toStartOf="@+id/numberAssist"
-        app:srcCompat="@drawable/min"
-        />
+    <Button
+        android:id="@+id/plusAssistsbutton"
+        android:layout_width="13dp"
+        android:layout_height="18dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/plus"
+        android:textColor="#000"
+        app:layout_constraintBottom_toBottomOf="@+id/minusAssistsbutton"
+        app:layout_constraintStart_toEndOf="@+id/numberAssist" />
 
-    <ImageButton
-        android:id="@+id/plusAssists"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Button
+        android:id="@+id/minusAssistsbutton"
+        android:layout_width="12dp"
+        android:layout_height="24dp"
+
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/min"
         app:layout_constraintBottom_toBottomOf="@+id/numberAssist"
-        app:layout_constraintStart_toEndOf="@+id/numberAssist"
-        app:srcCompat="@drawable/plus" />
+        app:layout_constraintStart_toEndOf="@+id/imageView2" />
 
 
 </android.support.constraint.ConstraintLayout>

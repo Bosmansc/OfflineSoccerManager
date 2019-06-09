@@ -18,6 +18,7 @@ import java.util.Calendar;
 
 import static android.content.Context.ALARM_SERVICE;
 
+
 public class NotificationScheduler
 {
     public static final int DAILY_REMINDER_REQUEST_CODE=100;
@@ -25,21 +26,26 @@ public class NotificationScheduler
 
     public static void setReminder(Context context,Class<?> cls,int hour, int min)
     {
-        Calendar calendar = Calendar.getInstance();
-
+      /*  Calendar calendar = Calendar.getInstance();
         Calendar setcalendar = Calendar.getInstance();
         setcalendar.set(Calendar.HOUR_OF_DAY, hour);
         setcalendar.set(Calendar.MINUTE, min);
         setcalendar.set(Calendar.SECOND, 0);
+        setcalendar.set(Calendar.DAY_OF_WEEK,Calendar.SUNDAY);
 
         // cancel already scheduled reminders
         cancelReminder(context,cls);
 
-        if(setcalendar.before(calendar))
-            setcalendar.add(Calendar.DATE,1);
+        if(setcalendar.before(calendar)){
+            //  setcalendar.add(Calendar.DATE,1);
+        }*/
+
+        //usage:
+        Calendar c = Calendar.getInstance();
+        SetToNextDayOfWeek(Calendar.MONDAY,c);
+        c.set(Calendar.HOUR_OF_DAY,20);
 
         // Enable a receiver
-
         ComponentName receiver = new ComponentName(context, cls);
         PackageManager pm = context.getPackageManager();
 
@@ -51,14 +57,13 @@ public class NotificationScheduler
         Intent intent1 = new Intent(context, cls);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, DAILY_REMINDER_REQUEST_CODE, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, setcalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), AlarmManager.INTERVAL_DAY*7, pendingIntent);
 
     }
 
     public static void cancelReminder(Context context,Class<?> cls)
     {
         // Disable a receiver
-
         ComponentName receiver = new ComponentName(context, cls);
         PackageManager pm = context.getPackageManager();
 
@@ -75,10 +80,10 @@ public class NotificationScheduler
 
     }
 
-    public static void addNotification(Context context,Class<?> cls,String title,String content){
+    public static void addNotification(Context context, Class<?> cls){
         String CHANNEL_ID = "my_channel_01";
         CharSequence name = "my_channel";
-        String Description = "This is my channel";
+        String Description = "This is the indoor soccer manager channel";
 
         int NOTIFICATION_ID = 234;
 
@@ -93,14 +98,13 @@ public class NotificationScheduler
             mChannel.enableLights(true);
             mChannel.setLightColor(Color.GREEN);
             mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mChannel.setVibrationPattern(new long[]{100, 800, 100, 800, 100, 800, 100, 800, 100});
             mChannel.setShowBadge(true);
 
             if (notificationManager != null) {
 
                 notificationManager.createNotificationChannel(mChannel);
             }
-
         }
 
         Intent notificationIntent = new Intent(context, cls);
@@ -110,9 +114,9 @@ public class NotificationScheduler
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("TITLE Frigo App")
-                .setContentText("SUB-TITLE")
-                .setStyle(new NotificationCompat.BigTextStyle().bigText("Notice that the NotificationCompat.Builder constructor requires that you provide a channel ID. This is required for compatibility with Android 8.0 (API level 26) and higher, but is ignored by older versions By default, the notification's text content is truncated to fit one line. If you want your notification to be longer, you can enable an expandable notification by adding a style template with setStyle(). For example, the following code creates a larger text area"))
+                .setContentTitle("Volgende wedstrijd" )
+                .setContentText("Check de app voor de wedstrijd van deze week!")
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(""))
                 .setSmallIcon(R.drawable.applogopngdraw)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(resultPendingIntent)
@@ -127,6 +131,17 @@ public class NotificationScheduler
         if (notificationManager != null) {
 
             notificationManager.notify(NOTIFICATION_ID, builder.build());
+        }
+    }
+
+    //dayOfWeekToSet is a constant from the Calendar class
+    //c is the calendar instance
+    public static void SetToNextDayOfWeek(int dayOfWeekToSet, Calendar c){
+        int currentDayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        //add 1 day to the current day until we get to the day we want
+        while(currentDayOfWeek != dayOfWeekToSet){
+            c.add(Calendar.DAY_OF_WEEK, 1);
+            currentDayOfWeek = c.get(Calendar.DAY_OF_WEEK);
         }
     }
 

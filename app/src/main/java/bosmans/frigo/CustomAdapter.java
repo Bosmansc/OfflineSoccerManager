@@ -58,7 +58,7 @@ public class CustomAdapter extends BaseAdapter {
             holder.btn_plus = (Button) convertView.findViewById(R.id.plus);
             holder.btn_plusAssists = convertView.findViewById(R.id.plusAssists);
             holder.btn_minus = (Button) convertView.findViewById(R.id.minus);
-            holder.btn_minusAssists = convertView.findViewById(R.id.minusAssists);
+            holder.btn_minusAssists = convertView.findViewById(R.id.minusAssist);
 
             convertView.setTag(holder);
         }else {
