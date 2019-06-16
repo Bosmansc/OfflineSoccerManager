@@ -10,8 +10,8 @@
         android:id="@+id/btn_viewGames"
         android:layout_width="125dp"
         android:layout_height="95dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:background="@drawable/btn_background"
         android:text="Alle wedstrijden"
         android:textColor="@color/colorPrimary"
@@ -21,55 +21,48 @@
 
     <Button
         android:id="@+id/btn_aanwezigheid"
-        android:layout_width="138dp"
-        android:layout_height="106dp"
+        android:layout_width="88dp"
+        android:layout_height="0dp"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:background="@drawable/btn_background"
         android:text="Bevestig aanwezigheid"
         android:textColor="@color/colorPrimary"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintCircleRadius="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_nextGame" />
+        tools:layout_editor_absoluteX="24dp" />
 
     <Button
         android:id="@+id/btn_presentPlayers"
         android:layout_width="125dp"
         android:layout_height="95dp"
-        android:layout_marginTop="56dp"
         android:background="@drawable/btn_background"
         android:text="Spelers aanwezig"
         android:textColor="@color/colorPrimary"
         app:layout_constraintCircleRadius="0dp"
         app:layout_constraintEnd_toEndOf="@+id/btn_viewGames"
-        app:layout_constraintTop_toBottomOf="@+id/btn_viewGames" />
+        app:layout_constraintTop_toTopOf="@+id/btn_editGoalsAssists" />
+
 
     <Button
         android:id="@+id/btn_goalsAndAssistsRanking"
         android:layout_width="125dp"
         android:layout_height="95dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="60dp"
         android:background="@drawable/btn_background"
         android:text="Topscoorder/Assistkoning"
         android:textColor="@color/colorPrimary"
         app:layout_constraintCircleRadius="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_aanwezigheid" />
+        app:layout_constraintTop_toBottomOf="@+id/reminderSwitch" />
 
     <Button
         android:id="@+id/btn_editGoalsAssists"
         android:layout_width="125dp"
         android:layout_height="95dp"
-
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="35dp"
         android:background="@drawable/btn_background"
         android:text="Goals/Assists"
         android:textColor="@color/colorPrimary"
@@ -97,16 +90,56 @@
 
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/reminderSwitch"
-        android:layout_width="149dp"
-        android:layout_height="68dp"
+        android:layout_width="134dp"
+        android:layout_height="41dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="8dp"
         android:checked="false"
         android:gravity="center_vertical"
         android:text="Herinneringen"
-        app:layout_constraintEnd_toEndOf="@+id/btn_presentPlayers"
-        app:layout_constraintTop_toBottomOf="@+id/btn_editGoalsAssists" />
+        app:layout_constraintStart_toStartOf="@+id/imgbtn_check"
+        app:layout_constraintTop_toBottomOf="@+id/btn_questionmark" />
+
+    <ImageButton
+        android:id="@+id/imgbtn_check"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@drawable/btn_background"
+        app:layout_constraintEnd_toStartOf="@+id/btn_questionmark"
+        app:layout_constraintTop_toTopOf="@+id/btn_questionmark"
+        app:srcCompat="@drawable/check" />
+
+    <ImageButton
+        android:id="@+id/imgbtn_clear"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginLeft="13dp"
+        android:background="@drawable/btn_background"
+        app:layout_constraintStart_toEndOf="@+id/btn_questionmark"
+        app:layout_constraintTop_toTopOf="@+id/btn_questionmark"
+        app:srcCompat="@drawable/clear" />
+
+    <Button
+        android:id="@+id/btn_questionmark"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/btn_background"
+        android:text="?"
+        android:textColor="@color/colorPrimary"
+        android:textSize="22dp"
+        app:layout_constraintCircleRadius="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nextGame" />
 
 
 </android.support.constraint.ConstraintLayout>

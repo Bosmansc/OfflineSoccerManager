@@ -1,12 +1,12 @@
 package bosmans.frigo;
 import android.app.ProgressDialog;
-import bosmans.frigo.R;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,9 +15,11 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -116,7 +118,6 @@ public class PresentPlayers extends AppCompatActivity {
     }
 
     // get the present players of the following game
-
     private void getPlayers(final String userPassword, String volgendePloeg) {
 
         volgendePloeg = volgendePloeg.replaceAll(" ","").replaceAll("'","");

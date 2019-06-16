@@ -3,12 +3,14 @@
     <corners
         android:radius="14dp"
         />
+
+  <!--  the first to digits from the color are for the transparency-->
     <gradient
         android:angle="45"
         android:centerX="80%"
-        android:centerColor="#65000000"
-        android:startColor="#65000000"
-        android:endColor="#65020202"
+        android:centerColor="#98000000"
+        android:startColor="#98000000"
+        android:endColor="#98000000"
         android:type="linear"
         />
     <padding

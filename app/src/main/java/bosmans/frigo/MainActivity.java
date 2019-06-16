@@ -3,6 +3,7 @@ package bosmans.frigo;
 import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -11,8 +12,10 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,9 +24,11 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,7 +38,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener {
 
-    Button buttonListGames, buttonAanwezigheid, buttonPresentPlayers, buttonGoalsAndAssists, buttonEditGoalsAndAssists;
+    Button buttonListGames, buttonAanwezigheid, buttonPresentPlayers, buttonGoalsAndAssists, buttonEditGoalsAndAssists, buttonQuestionMark;
+    ImageButton imageButtonCheck, imageButtonClear;
     TextView nextGame;
     ProgressDialog loading;
     String volgendePloeg;
@@ -56,19 +62,24 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         buttonPresentPlayers = findViewById(R.id.btn_presentPlayers);
         buttonGoalsAndAssists = findViewById(R.id.btn_goalsAndAssistsRanking);
         buttonEditGoalsAndAssists = findViewById(R.id.btn_editGoalsAssists);
-        nextGame = (TextView)findViewById(R.id.tv_nextGame);
+        buttonQuestionMark = findViewById(R.id.btn_questionmark);
+        imageButtonCheck = findViewById(R.id.imgbtn_check);
+        imageButtonClear = findViewById(R.id.imgbtn_clear);
+        nextGame = findViewById(R.id.tv_nextGame);
         buttonListGames.setOnClickListener(this);
         buttonAanwezigheid.setOnClickListener(this);
         buttonPresentPlayers.setOnClickListener(this);
         buttonGoalsAndAssists.setOnClickListener(this);
         buttonEditGoalsAndAssists.setOnClickListener(this);
+        buttonQuestionMark.setOnClickListener(this);
+        imageButtonCheck.setOnClickListener(this);
+        imageButtonClear.setOnClickListener(this);
 
         // notifications
         localData = new LocalData(getApplicationContext());
         myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         reminderSwitch = findViewById(R.id.reminderSwitch);
         reminderSwitch.setChecked(localData.getReminderStatus());
-
 
         reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -85,21 +96,48 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             }
         });
 
-      //  Intent intentLogin = getIntent();
-       // String userName = intentLogin.getStringExtra("userName");
-       // userPassword = intentLogin.getStringExtra("userPassword");
-        String userName = localData.get_username();
+       /* // remember if button about presence is clicked
+        Drawable d = getResources().getDrawable(R.drawable.buttonbackgroundclicked);
+        Drawable nc = getResources().getDrawable(R.drawable.btn_background);
+        if(localData.getPresentButton()){
+            imageButtonCheck.setBackground(d);
+            imageButtonCheck.setEnabled(false);
+        } else{
+            imageButtonCheck.setBackground(nc);
+            imageButtonCheck.setEnabled(true);
+        }
+        if(localData.getNotPresentButton()){
+            imageButtonClear.setBackground(d);
+            imageButtonClear.setEnabled(false);
+        } else{
+            imageButtonClear.setBackground(nc);
+            imageButtonClear.setEnabled(true);
+        }
+        if(localData.getMaybeButton()){
+            buttonQuestionMark.setBackground(d);
+            buttonQuestionMark.setEnabled(false);
+        } else{
+            buttonQuestionMark.setBackground(nc);
+            buttonQuestionMark.setEnabled(true);
+        }*/
+
+        String userName = localData.get_username().toLowerCase();
         userPassword = localData.get_password();
 
         // method to present the next game at the top of the screen
-        getGame("start", userName, userPassword);
+        getGame("start", userName, userPassword, "notPresent");
         Log.e("TAG", "Message");
+
+        // method to check if the player already answered if he'd come for the following game and highlight the button
+
 
 
     }
 
     @Override
     public void onClick(View v) {
+        Drawable d = getResources().getDrawable(R.drawable.buttonbackgroundclicked);
+        Drawable nc = getResources().getDrawable(R.drawable.btn_background);
 
         if(v==buttonListGames){
             Intent intentLogin = getIntent();
@@ -139,8 +177,59 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             Intent intentLogin = getIntent();
             String userName = intentLogin.getStringExtra("userName");
             userPassword = intentLogin.getStringExtra("userPassword");
-            getGame("aanwezigheid", userName, userPassword);
+            getGame("aanwezigheid", userName, userPassword, "notPresent");
             buttonAanwezigheid.setEnabled(false);
+        }
+
+        if(v==buttonQuestionMark){
+            Intent intentLogin = getIntent();
+            String userName = intentLogin.getStringExtra("userName");
+            userPassword = intentLogin.getStringExtra("userPassword");
+            getGame("aanwezigheid", userName, userPassword, "maybe");
+
+            buttonQuestionMark.setEnabled(false);
+            buttonQuestionMark.setBackground(d);
+            localData.setMaybeButton(true);
+            localData.setPresentButton(false);
+            localData.setNotPresentButton(false);
+            imageButtonCheck.setEnabled(true);
+            imageButtonCheck.setBackground(nc);
+            imageButtonClear.setEnabled(true);
+            imageButtonClear.setBackground(nc);
+        }
+
+        if(v==imageButtonCheck){
+            Intent intentLogin = getIntent();
+            String userName = intentLogin.getStringExtra("userName");
+            userPassword = intentLogin.getStringExtra("userPassword");
+            getGame("aanwezigheid", userName, userPassword, "present");
+
+            imageButtonCheck.setEnabled(false);
+            imageButtonCheck.setBackground(d);
+            localData.setPresentButton(true);
+            localData.setNotPresentButton(false);
+            localData.setMaybeButton(false);
+            buttonQuestionMark.setEnabled(true);
+            buttonQuestionMark.setBackground(nc);
+            imageButtonClear.setEnabled(true);
+            imageButtonClear.setBackground(nc);
+        }
+
+        if(v==imageButtonClear){
+            Intent intentLogin = getIntent();
+            String userName = intentLogin.getStringExtra("userName");
+            userPassword = intentLogin.getStringExtra("userPassword");
+            getGame("aanwezigheid", userName, userPassword, "notPresent");
+
+            imageButtonClear.setEnabled(false);
+            imageButtonClear.setBackground(d);
+            localData.setNotPresentButton(true);
+            localData.setPresentButton(false);
+            localData.setMaybeButton(false);
+            buttonQuestionMark.setEnabled(true);
+            buttonQuestionMark.setBackground(nc);
+            imageButtonCheck.setEnabled(true);
+            imageButtonCheck.setBackground(nc);
         }
 
         if(v==buttonPresentPlayers){
@@ -156,7 +245,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     }
 
-    private void getGame(final String string, final String userName, final String userPassword){
+    private void getGame(final String string, final String userName, final String userPassword, final String presence){
 
         loading =  ProgressDialog.show(this,"Loading","Even geduld ",false,true);
 
@@ -166,7 +255,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        parseItems(response, string, userName, userPassword);
+                        parseItems(response, string, userName, userPassword, presence);
                     }
                 },
 
@@ -186,7 +275,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     }
 
-    private void parseItems(String jsonResposnce, String string, String userName, String userPassword) {
+    private void parseItems(String jsonResposnce, String string, String userName, String userPassword, String presence) {
         try {
             JSONObject jobj = new JSONObject(jsonResposnce);
             JSONArray jarray = jobj.getJSONArray("games");
@@ -215,12 +304,14 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                     String gameConvDate = destFormat.format(convertedDate);
 
-                    if(string == "start")
-                    nextGame.setText("Volgende wedstrijd  \n \n" + ploeg + " \n \n" + outputDate );
-
+                    if(string == "start") {
+                        nextGame.setText("Volgende wedstrijd  \n \n" + ploeg + " \n \n" + outputDate);
+                        volgendePloeg = ploeg;
+                        getPlayer(userPassword, volgendePloeg, userName);
+                    }
                     if(string == "aanwezigheid") {
                         volgendePloeg = ploeg;
-                        addNameToSheet(userName, userPassword); // here the name is added to the sheet based on the next opponent
+                        addNameToSheet(userName, userPassword, presence); // here the name is added to the sheet based on the next opponent
                     }
                     break;
                 }
@@ -232,12 +323,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             e.printStackTrace();
         }
 
-        loading.dismiss();
+
     }
 
     //This is the part where data is transferred from Your Android phone to Sheet by using HTTP Rest API calls
 
-    private void addNameToSheet(final String userName, final String userPassword) {
+    private void addNameToSheet(final String userName, final String userPassword, final String presence) {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbzxsTjbi4wuds0wBuQW3PrLMaEvbnAD9_-X4ROOn7wGBIZoYEA/exec",
                 new Response.Listener<String>() {
@@ -260,7 +351,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                 //here we pass params
                 parmas.put("action","addPlayer");
-                parmas.put("speler",userName);
+                parmas.put("speler",userName + " " + presence);
                 parmas.put("team",userPassword);
                 parmas.put("ploeg",volgendePloeg.replaceAll(" ","").replaceAll("'",""));
 
@@ -273,6 +364,99 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         stringRequest.setRetryPolicy(retryPolicy);
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(stringRequest);
+    }
+
+    // get the present players of the following game
+    private void getPlayer(final String userPassword, String volgendePloeg, final String userName) {
+
+        volgendePloeg = volgendePloeg.replaceAll(" ","").replaceAll("'","");
+        String team = "&team=" + userPassword;
+        String url = "https://script.google.com/macros/s/AKfycbxfBMmH64EOB4XSh2hsHfz682WCr5WrkuBvxEXXQqPJhv1rinc/exec?action=getPlayers&ploeg=" + volgendePloeg + team;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        parseItemsGetPlayers(response, userPassword, userName);
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        );
+
+        int socketTimeOut = 50000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(stringRequest);
+
+
+    }
+
+    private void parseItemsGetPlayers(String jsonResposnce, String userPassword, String userName) {
+        Drawable d = getResources().getDrawable(R.drawable.buttonbackgroundclicked);
+        Drawable nc = getResources().getDrawable(R.drawable.btn_background);
+
+        try {
+            JSONObject jobj = new JSONObject(jsonResposnce);
+            JSONArray jarray = jobj.getJSONArray("games");
+
+            for (int i = 0; i < jarray.length(); i++) {
+
+                JSONObject jo = jarray.getJSONObject(i);
+                String player = jo.getString(volgendePloeg);
+
+
+                String[] playerString = player.split(" ",2);
+                String playerName = playerString[0].toLowerCase();
+                String playerPresence = playerString[1];
+
+                // if the first word of the player matches, get the player (for example 'Cederic' matches 'Cederic Misschien'
+                // and set buttons to present, not present or maybe
+                if (playerName.equals(userName)) {
+
+                    // player is already present
+                    if(playerPresence.equals("present")){
+                        imageButtonCheck.setEnabled(false);
+                        imageButtonCheck.setBackground(d);
+                        buttonQuestionMark.setEnabled(true);
+                        buttonQuestionMark.setBackground(nc);
+                        imageButtonClear.setEnabled(true);
+                        imageButtonClear.setBackground(nc);
+                    }
+
+                    //player is already not present
+                    if(playerPresence.equals("notPresent")){
+                        imageButtonClear.setEnabled(false);
+                        imageButtonClear.setBackground(d);
+                        buttonQuestionMark.setEnabled(true);
+                        buttonQuestionMark.setBackground(nc);
+                        imageButtonCheck.setEnabled(true);
+                        imageButtonCheck.setBackground(nc);
+                    }
+
+                    // player is already maybe present
+                    if(playerPresence.equals("maybePresent")){
+                        buttonQuestionMark.setEnabled(false);
+                        buttonQuestionMark.setBackground(d);
+                        imageButtonCheck.setEnabled(true);
+                        imageButtonCheck.setBackground(nc);
+                        imageButtonClear.setEnabled(true);
+                        imageButtonClear.setBackground(nc);
+                    }
+
+                    break;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        loading.dismiss();
+
     }
 
 }
