@@ -304,12 +304,14 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                     String gameConvDate = destFormat.format(convertedDate);
 
-                    if(string == "start") {
-                        nextGame.setText("Volgende wedstrijd  \n \n" + ploeg + " \n \n" + outputDate);
+                    if(string.equals("start")) {
+
+                        String nextGameString = "Volgende wedstrijd  \n \n" + ploeg + " \n \n" + outputDate;
+                        nextGame.setText(nextGameString);
                         volgendePloeg = ploeg;
                         getPlayer(userPassword, volgendePloeg, userName);
                     }
-                    if(string == "aanwezigheid") {
+                    if(string.equals("aanwezigheid")) {
                         volgendePloeg = ploeg;
                         addNameToSheet(userName, userPassword, presence); // here the name is added to the sheet based on the next opponent
                     }
@@ -351,7 +353,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                 //here we pass params
                 parmas.put("action","addPlayer");
-                parmas.put("speler",userName + " " + presence);
+                parmas.put("speler",userName);
+                parmas.put("spelerVolledig",userName + " " + presence);
                 parmas.put("team",userPassword);
                 parmas.put("ploeg",volgendePloeg.replaceAll(" ","").replaceAll("'",""));
 
