@@ -15,7 +15,7 @@
         android:roundIcon="@drawable/applogopngdraw"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!-- Register the Alarm Receiver -->
+        <activity android:name=".PlayersPresent" /> <!-- Register the Alarm Receiver -->
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="false">

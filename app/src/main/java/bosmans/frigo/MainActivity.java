@@ -96,41 +96,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             }
         });
 
-       /* // remember if button about presence is clicked
-        Drawable d = getResources().getDrawable(R.drawable.buttonbackgroundclicked);
-        Drawable nc = getResources().getDrawable(R.drawable.btn_background);
-        if(localData.getPresentButton()){
-            imageButtonCheck.setBackground(d);
-            imageButtonCheck.setEnabled(false);
-        } else{
-            imageButtonCheck.setBackground(nc);
-            imageButtonCheck.setEnabled(true);
-        }
-        if(localData.getNotPresentButton()){
-            imageButtonClear.setBackground(d);
-            imageButtonClear.setEnabled(false);
-        } else{
-            imageButtonClear.setBackground(nc);
-            imageButtonClear.setEnabled(true);
-        }
-        if(localData.getMaybeButton()){
-            buttonQuestionMark.setBackground(d);
-            buttonQuestionMark.setEnabled(false);
-        } else{
-            buttonQuestionMark.setBackground(nc);
-            buttonQuestionMark.setEnabled(true);
-        }*/
-
         String userName = localData.get_username().toLowerCase();
         userPassword = localData.get_password();
 
         // method to present the next game at the top of the screen
         getGame("start", userName, userPassword, "notPresent");
         Log.e("TAG", "Message");
-
-        // method to check if the player already answered if he'd come for the following game and highlight the button
-
-
 
     }
 
@@ -237,9 +208,13 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             String userName = intentLogin.getStringExtra("userName");
             userPassword = intentLogin.getStringExtra("userPassword");
 
-            Intent intent = new Intent(getApplicationContext(), PresentPlayers.class);
-            intent.putExtra("userName", userName);
-            intent.putExtra("userPassword", userPassword);
+       //     Intent intent = new Intent(getApplicationContext(), PresentPlayers.class);
+            Intent intent = new Intent(getApplicationContext(), PlayersPresent.class);
+
+            getGame("start", userName, userPassword, "notPresent");
+
+       //     intent.putExtra("userName", userName);
+       //     intent.putExtra("userPassword", userPassword);
             startActivity(intent);
         }
 
@@ -411,8 +386,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                 JSONObject jo = jarray.getJSONObject(i);
                 String player = jo.getString(volgendePloeg);
-
-
                 String[] playerString = player.split(" ",2);
                 String playerName = playerString[0].toLowerCase();
                 String playerPresence = playerString[1];
@@ -453,6 +426,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                     break;
                 }
+
+
+
+
+
+
             }
         } catch (JSONException e) {
             e.printStackTrace();

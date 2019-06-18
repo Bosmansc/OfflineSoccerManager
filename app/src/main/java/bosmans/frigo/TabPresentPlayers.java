@@ -1,10 +1,15 @@
 package bosmans.frigo;
+
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -27,37 +32,43 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-public class PresentPlayers extends AppCompatActivity {
+public class TabPresentPlayers extends Fragment {
 
-    ListView listViewPresentPlayers;
+
+    ListView listViewPresentPlayersFragment;
     ListView listViewNotPresentPlayers;
     ListView listViewMaybePresentPlayers;
     ListAdapter adapterPresent;
     ListAdapter adapterNotPresent;
     ListAdapter adapterMaybePresent;
     ProgressDialog loading;
+    ProgressBar progressBar;
     String volgendePloeg;
 
+    public TabPresentPlayers() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_present_players);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        listViewPresentPlayers = findViewById(R.id.lv_playersPresent);
-        listViewNotPresentPlayers = findViewById(R.id.lv_playersNotPresent);
-        listViewMaybePresentPlayers = findViewById(R.id.lv_playersMaybe);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_tab_present_players, container, false);
+        listViewPresentPlayersFragment = view.findViewById(R.id.lv_playersPresentFragment);
 
-        Intent intentLogin = getIntent();
-        String userName = intentLogin.getStringExtra("userName");
-        String userPassword = intentLogin.getStringExtra("userPassword");
-        getNextGame(userPassword); // nodig om juiste get request te kunnen doen (parameter ploeg is vereist)
+        Context context = getActivity().getApplicationContext();
 
+        String password = "DQS";
+        getNextGame(password, context); // nodig om juiste get request te kunnen doen (parameter ploeg is vereist)
+
+        return view;
     }
 
     // use the following methods to get the next game (naam van de volgende ploeg, om de speler in de juiste kolom toe te voegen)
-    private void getNextGame(final String userPassword){
+    private void getNextGame(final String userPassword, Context context) {
 
-        loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
         String URL = "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames&team=" + userPassword;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
@@ -79,7 +90,7 @@ public class PresentPlayers extends AppCompatActivity {
         int socketTimeOut = 50000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(stringRequest);
 
     }
@@ -106,9 +117,9 @@ public class PresentPlayers extends AppCompatActivity {
                 convertedDate = cal.getTime();
                 Date date = new Date();
 
-                if(date.compareTo(convertedDate) < 0) // Return value > 0 , if convertedDate is after the date argument.
+                if (date.compareTo(convertedDate) < 0) // Return value > 0 , if convertedDate is after the date argument.
                 {
-                    volgendePloeg = ploeg.replaceAll(" ","").replaceAll("'","");
+                    volgendePloeg = ploeg.replaceAll(" ", "").replaceAll("'", "");
                     getPlayers(userPassword, volgendePloeg);
                     break;
                 }
@@ -124,7 +135,7 @@ public class PresentPlayers extends AppCompatActivity {
     // get the present players of the following game
     private void getPlayers(final String userPassword, String volgendePloeg) {
 
-        volgendePloeg = volgendePloeg.replaceAll(" ","").replaceAll("'","");
+        volgendePloeg = volgendePloeg.replaceAll(" ", "").replaceAll("'", "");
         String team = "&team=" + userPassword;
         String url = "https://script.google.com/macros/s/AKfycbxfBMmH64EOB4XSh2hsHfz682WCr5WrkuBvxEXXQqPJhv1rinc/exec?action=getPlayers&ploeg=" + volgendePloeg + team;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -145,7 +156,7 @@ public class PresentPlayers extends AppCompatActivity {
         int socketTimeOut = 50000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
         queue.add(stringRequest);
 
     }
@@ -165,7 +176,7 @@ public class PresentPlayers extends AppCompatActivity {
                 JSONObject jo = jarray.getJSONObject(i);
                 String player = jo.getString(volgendePloeg);
 
-                if(player.toLowerCase().indexOf("present") !=-1) {
+                if (player.toLowerCase().indexOf("present") != -1) {
                     String[] playerString = player.split(" ", 2);
                     String playerName = playerString[0].toLowerCase();
                     String playerPresence = playerString[1];
@@ -195,20 +206,12 @@ public class PresentPlayers extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        adapterPresent = new SimpleAdapter(this,listPresent,R.layout.activity_present_players_row,
+
+         adapterPresent = new SimpleAdapter(getActivity().getApplicationContext(),listPresent,R.layout.activity_present_players_row,
                 new String[]{volgendePloeg},new int[]{R.id.tv_speler});
 
-        adapterNotPresent = new SimpleAdapter(this,listNotPresent,R.layout.activity_present_players_row,
-                new String[]{volgendePloeg},new int[]{R.id.tv_speler});
-
-        adapterMaybePresent = new SimpleAdapter(this,listMaybePresent,R.layout.activity_present_players_row,
-                new String[]{volgendePloeg},new int[]{R.id.tv_speler});
-
-        listViewPresentPlayers.setAdapter(adapterPresent);
-        listViewNotPresentPlayers.setAdapter(adapterNotPresent);
-        listViewMaybePresentPlayers.setAdapter(adapterMaybePresent);
+         listViewPresentPlayersFragment.setAdapter(adapterPresent);
 
 
-        loading.dismiss();
     }
 }
