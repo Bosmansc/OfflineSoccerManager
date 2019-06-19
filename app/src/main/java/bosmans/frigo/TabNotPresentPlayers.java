@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -36,6 +37,7 @@ public class TabNotPresentPlayers extends Fragment {
     ListAdapter adapterNotPresent;
     String volgendePloeg;
     LocalData localData;
+    TextView loading;
 
     public TabNotPresentPlayers() {
         // Required empty public constructor
@@ -48,6 +50,7 @@ public class TabNotPresentPlayers extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_not_present_players, container, false);
         listViewNotPresentPlayers = view.findViewById(R.id.lv_playersNotPresentFragment);
+        loading = view.findViewById(R.id.tv_loading);
 
         Context context = getActivity().getApplicationContext();
 
@@ -186,7 +189,7 @@ public class TabNotPresentPlayers extends Fragment {
             e.printStackTrace();
         }
 
-
+        loading.setText("");
         adapterNotPresent = new SimpleAdapter(getActivity().getApplicationContext(),listNotPresent,R.layout.activity_present_players_row,
                 new String[]{volgendePloeg},new int[]{R.id.tv_speler});
 

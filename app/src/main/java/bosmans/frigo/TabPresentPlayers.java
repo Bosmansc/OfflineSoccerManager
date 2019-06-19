@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -37,6 +38,7 @@ public class TabPresentPlayers extends Fragment {
     ListAdapter adapterPresent;
     String volgendePloeg;
     LocalData localData;
+    TextView loading;
 
     public TabPresentPlayers() {
         // Required empty public constructor
@@ -50,6 +52,7 @@ public class TabPresentPlayers extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_present_players, container, false);
         listViewPresentPlayersFragment = view.findViewById(R.id.lv_playersPresentFragment);
+        loading = view.findViewById(R.id.tv_loading);
 
         localData = new LocalData(getActivity().getApplicationContext());
         String password = localData.get_password();
@@ -62,7 +65,7 @@ public class TabPresentPlayers extends Fragment {
         return view;
     }
 
-    
+
 
     // use the following methods to get the next game (naam van de volgende ploeg, om de speler in de juiste kolom toe te voegen)
     private void getNextGame(final String userPassword, Context context) {
@@ -192,11 +195,11 @@ public class TabPresentPlayers extends Fragment {
             e.printStackTrace();
         }
 
-
-         adapterPresent = new SimpleAdapter(getActivity().getApplicationContext(),listPresent,R.layout.activity_present_players_row,
+        loading.setText("");
+        adapterPresent = new SimpleAdapter(getActivity().getApplicationContext(),listPresent,R.layout.activity_present_players_row,
                 new String[]{volgendePloeg},new int[]{R.id.tv_speler});
 
-         listViewPresentPlayersFragment.setAdapter(adapterPresent);
+        listViewPresentPlayersFragment.setAdapter(adapterPresent);
 
 
     }
