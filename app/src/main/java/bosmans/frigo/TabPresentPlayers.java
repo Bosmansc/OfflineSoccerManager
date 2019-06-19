@@ -1,6 +1,5 @@
 package bosmans.frigo;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -36,14 +34,9 @@ public class TabPresentPlayers extends Fragment {
 
 
     ListView listViewPresentPlayersFragment;
-    ListView listViewNotPresentPlayers;
-    ListView listViewMaybePresentPlayers;
     ListAdapter adapterPresent;
-    ListAdapter adapterNotPresent;
-    ListAdapter adapterMaybePresent;
-    ProgressDialog loading;
-    ProgressBar progressBar;
     String volgendePloeg;
+    LocalData localData;
 
     public TabPresentPlayers() {
         // Required empty public constructor
@@ -58,13 +51,18 @@ public class TabPresentPlayers extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tab_present_players, container, false);
         listViewPresentPlayersFragment = view.findViewById(R.id.lv_playersPresentFragment);
 
+        localData = new LocalData(getActivity().getApplicationContext());
+        String password = localData.get_password();
+
         Context context = getActivity().getApplicationContext();
 
-        String password = "DQS";
+      //  String password2 = "DQS";
         getNextGame(password, context); // nodig om juiste get request te kunnen doen (parameter ploeg is vereist)
 
         return view;
     }
+
+    
 
     // use the following methods to get the next game (naam van de volgende ploeg, om de speler in de juiste kolom toe te voegen)
     private void getNextGame(final String userPassword, Context context) {
@@ -186,18 +184,6 @@ public class TabPresentPlayers extends Fragment {
                         HashMap<String, String> item = new HashMap<>();
                         item.put(volgendePloeg, playerName);
                         listPresent.add(item);
-                    }
-                    if (!player.isEmpty() && playerPresence.equals("notPresent")) {
-                        // add player to present to hashMap
-                        HashMap<String, String> item = new HashMap<>();
-                        item.put(volgendePloeg, playerName);
-                        listNotPresent.add(item);
-                    }
-                    if (!player.isEmpty() && playerPresence.equals("maybePresent")) {
-                        // add player to present to hashMap
-                        HashMap<String, String> item = new HashMap<>();
-                        item.put(volgendePloeg, playerName);
-                        listMaybePresent.add(item);
                     }
                 }
 
