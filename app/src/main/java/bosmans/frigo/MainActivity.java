@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     TextView nextGame;
     ProgressDialog loading;
     String volgendePloeg;
-    String userPassword = "FL";
+    String userPassword, userName;
     SwitchCompat reminderSwitch;
     LocalData localData;
     ClipboardManager myClipboard;
@@ -96,8 +96,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             }
         });
 
-        String userName = localData.get_username().toLowerCase();
-        userPassword = localData.get_password();
+        Intent intentLogin = getIntent();
+        userPassword = intentLogin.getStringExtra("userPassword");
+        userName = intentLogin.getStringExtra("userName");
 
         // method to present the next game at the top of the screen
         getGame("start", userName, userPassword, "notPresent");
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             Intent intentLogin = getIntent();
             String userName = intentLogin.getStringExtra("userName");
             userPassword = intentLogin.getStringExtra("userPassword");
-            getGame("aanwezigheid", userName, userPassword, "maybe");
+            getGame("aanwezigheid", userName, userPassword, "maybePresent");
 
             buttonQuestionMark.setEnabled(false);
             buttonQuestionMark.setBackground(d);
@@ -276,18 +277,15 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                 if(date.compareTo(convertedDate) < 0) // Return value > 0 , if convertedDate is after the date argument.
                 {
-
-                    String gameConvDate = destFormat.format(convertedDate);
-
                     if(string.equals("start")) {
 
                         String nextGameString = "Volgende wedstrijd  \n \n" + ploeg + " \n \n" + outputDate;
                         nextGame.setText(nextGameString);
-                        volgendePloeg = ploeg;
+                        volgendePloeg = ploeg.replaceAll(" ","").replaceAll("'","");
                         getPlayer(userPassword, volgendePloeg, userName);
                     }
                     if(string.equals("aanwezigheid")) {
-                        volgendePloeg = ploeg;
+                        volgendePloeg = ploeg.replaceAll(" ","").replaceAll("'","");
                         addNameToSheet(userName, userPassword, presence); // here the name is added to the sheet based on the next opponent
                     }
                     break;
@@ -385,49 +383,51 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             for (int i = 0; i < jarray.length(); i++) {
 
                 JSONObject jo = jarray.getJSONObject(i);
-                String player = jo.getString(volgendePloeg);
-                String[] playerString = player.split(" ",2);
-                String playerName = playerString[0].toLowerCase();
-                String playerPresence = playerString[1];
+                String player = jo.getString(volgendePloeg.replaceAll(" ","").replaceAll("'",""));
 
-                // if the first word of the player matches, get the player (for example 'Cederic' matches 'Cederic Misschien'
-                // and set buttons to present, not present or maybe
-                if (playerName.equals(userName)) {
+                if(!player.equals("")) {
+                    String[] playerString = player.split(" ", 2);
+                    String playerName = playerString[0].toLowerCase();
+                    String playerPresence = playerString[1];
 
-                    // player is already present
-                    if(playerPresence.equals("present")){
-                        imageButtonCheck.setEnabled(false);
-                        imageButtonCheck.setBackground(d);
-                        buttonQuestionMark.setEnabled(true);
-                        buttonQuestionMark.setBackground(nc);
-                        imageButtonClear.setEnabled(true);
-                        imageButtonClear.setBackground(nc);
+                    // if the first word of the player matches, get the player (for example 'Cederic' matches 'Cederic Misschien'
+                    // and set buttons to present, not present or maybe
+                    if (playerName.equals(userName)) {
+
+                        // player is already present
+                        if (playerPresence.equals("present")) {
+                            imageButtonCheck.setEnabled(false);
+                            imageButtonCheck.setBackground(d);
+                            buttonQuestionMark.setEnabled(true);
+                            buttonQuestionMark.setBackground(nc);
+                            imageButtonClear.setEnabled(true);
+                            imageButtonClear.setBackground(nc);
+                        }
+
+                        //player is already not present
+                        if (playerPresence.equals("notPresent")) {
+                            imageButtonClear.setEnabled(false);
+                            imageButtonClear.setBackground(d);
+                            buttonQuestionMark.setEnabled(true);
+                            buttonQuestionMark.setBackground(nc);
+                            imageButtonCheck.setEnabled(true);
+                            imageButtonCheck.setBackground(nc);
+                        }
+
+                        // player is already maybe present
+                        if (playerPresence.equals("maybePresent")) {
+                            buttonQuestionMark.setEnabled(false);
+                            buttonQuestionMark.setBackground(d);
+                            imageButtonCheck.setEnabled(true);
+                            imageButtonCheck.setBackground(nc);
+                            imageButtonClear.setEnabled(true);
+                            imageButtonClear.setBackground(nc);
+                        }
+
+                        break;
                     }
 
-                    //player is already not present
-                    if(playerPresence.equals("notPresent")){
-                        imageButtonClear.setEnabled(false);
-                        imageButtonClear.setBackground(d);
-                        buttonQuestionMark.setEnabled(true);
-                        buttonQuestionMark.setBackground(nc);
-                        imageButtonCheck.setEnabled(true);
-                        imageButtonCheck.setBackground(nc);
-                    }
-
-                    // player is already maybe present
-                    if(playerPresence.equals("maybePresent")){
-                        buttonQuestionMark.setEnabled(false);
-                        buttonQuestionMark.setBackground(d);
-                        imageButtonCheck.setEnabled(true);
-                        imageButtonCheck.setBackground(nc);
-                        imageButtonClear.setEnabled(true);
-                        imageButtonClear.setBackground(nc);
-                    }
-
-                    break;
                 }
-
-
 
 
 
