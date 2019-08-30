@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         buttonListGames = findViewById(R.id.btn_viewGames);
-        buttonAanwezigheid = findViewById(R.id.btn_aanwezigheid);
         buttonPresentPlayers = findViewById(R.id.btn_presentPlayers);
         buttonGoalsAndAssists = findViewById(R.id.btn_goalsAndAssistsRanking);
         buttonEditGoalsAndAssists = findViewById(R.id.btn_editGoalsAssists);
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageButtonClear = findViewById(R.id.imgbtn_clear);
         nextGame = findViewById(R.id.tv_nextGame);
         buttonListGames.setOnClickListener(this);
-        buttonAanwezigheid.setOnClickListener(this);
         buttonPresentPlayers.setOnClickListener(this);
         buttonGoalsAndAssists.setOnClickListener(this);
         buttonEditGoalsAndAssists.setOnClickListener(this);
