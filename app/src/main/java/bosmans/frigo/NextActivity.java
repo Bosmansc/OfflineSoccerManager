@@ -1,8 +1,10 @@
 package bosmans.frigo;
 
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class NextActivity extends AppCompatActivity {
 

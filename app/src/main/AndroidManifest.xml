@@ -40,6 +40,17 @@
         <activity android:name=".ListAllGames" />
         <activity android:name=".NextGame" />
         <activity android:name=".MainActivity" />
+
+
+
+
+
+
+
+
+
     </application>
+
+
 
 </manifest>

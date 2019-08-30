@@ -67,8 +67,8 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         holder.tvSpeler.setText(GoalsAndAssists.modelArrayList.get(position).getplayer());
-        holder.tvnumber.setText(String.valueOf(GoalsAndAssists.modelArrayList.get(position).getNumber()));
-        holder.tvAssists.setText(String.valueOf(GoalsAndAssists.modelArrayList.get(position).getAssists()));
+        holder.tvnumber.setText(String.valueOf(0));
+        holder.tvAssists.setText(String.valueOf(0));
 
 
         // plus Goals button

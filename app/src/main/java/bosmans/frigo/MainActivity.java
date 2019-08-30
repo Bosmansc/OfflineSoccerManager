@@ -5,8 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
+
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +14,9 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -36,7 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity  implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button buttonListGames, buttonAanwezigheid, buttonPresentPlayers, buttonGoalsAndAssists, buttonEditGoalsAndAssists, buttonQuestionMark;
     ImageButton imageButtonCheck, imageButtonClear;
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         Intent intentLogin = getIntent();
         userPassword = intentLogin.getStringExtra("userPassword");
-        userName = intentLogin.getStringExtra("userName");
+        userName = intentLogin.getStringExtra("userName").toLowerCase();
 
         // method to present the next game at the top of the screen
         getGame("start", userName, userPassword, "notPresent");

@@ -3,12 +3,13 @@ package bosmans.frigo;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -114,9 +115,9 @@ public class GoalsAndAssists extends AppCompatActivity implements View.OnClickLi
                 // add items to list
                 if (!speler.isEmpty()) {
                     ModelGoals modelGoals = new ModelGoals();
-                    modelGoals.setNumber(goals);
+                    modelGoals.setNumber(0);
                     modelGoals.setplayer(speler);
-                    modelGoals.setAssists(assists);
+                    modelGoals.setAssists(0);
                     modelArrayListGevuld.add(modelGoals);
                 }
             }
