@@ -41,6 +41,13 @@
         <activity android:name=".NextGame" />
         <activity android:name=".MainActivity" />
 
+        <service
+            android:name=".services.MyFirebaseInstanceService">
+        <intent-filter>
+            <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+        </intent-filter>
+        </service>
+
 
 
 
